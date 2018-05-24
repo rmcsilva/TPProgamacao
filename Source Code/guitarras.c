@@ -3,10 +3,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//TODO:ADICONAR UMA ID UNICOOO!!
 
-void preencheGuitarra(ptrGuitarra guitarra, int total){
-  guitarra->id = total;
+void preencheGuitarra(ptrGuitarra guitarra, int id){
+  guitarra->id=id;
   guitarra->estado = DISPONIVEL;
   printf("Introduza o nome da guitarra\n");
   scanf(" %[^\n]s", guitarra->nome);
@@ -26,9 +25,10 @@ ptrGuitarra adicionaGuitarra(ptrGuitarra guitarras, int *total){
     return guitarras;
   }
   guitarras=tmp;
-  preencheGuitarra(&guitarras[*total], *total);
+  //Garante um ID único
+  int id = devolveID(guitarras,*total);
+  preencheGuitarra(&guitarras[*total], id);
   (*total)++;
-
   return guitarras;
 }
 
@@ -78,6 +78,22 @@ void listarGuitarrasAlugadas(ptrGuitarra guitarras, int total){
       printf("Valor da Guitarra: %d\n\n\n", guitarras[i].valor);
     }
   }
+}
+
+int devolveID(ptrGuitarra listaGuitarras, int total){
+  int id;
+  do {
+    printf("Introduza o ID da nova guitarra:\n");
+    scanf(" %d", &id);
+    //Se a lita das guitarras estiver vazia não é preciso verificar
+    if (listaGuitarras==NULL) {
+      return id;
+    }
+    if (devolveIndexGuitarra(listaGuitarras, total, id) != -1)
+      printf("Já existe uma guitarra com o ID %d!\n", id);
+    else
+      return id;
+  } while(1);
 }
 
 //devolve -1 se não existir

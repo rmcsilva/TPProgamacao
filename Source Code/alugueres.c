@@ -1,12 +1,10 @@
-#include "alugueres.h"
+#include "clientes.h"
 #include "ui.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 void criarAluguer(ptrCliente listaClientes, ptrGuitarra listaGuitarras, int totalGuitarras, int diaAtual, int mesAtual, int anoAtual){
-  //TODO: Verificar e banir os clientes nessas condições!!!
   //TODO:FALTA VERIFICACOES
-  //TODO:Trocar clienteAtual por listaClientes?
   if(listaClientes==NULL){
     printf("Não existem clientes!\n\n");
     return;
@@ -33,19 +31,18 @@ void criarAluguer(ptrCliente listaClientes, ptrGuitarra listaGuitarras, int tota
     printf("O cliente não existe\n\n");
     return;
   }
-  //TODO:TESTARRR
   //Verifca se ao realizar o aluguer atual é ultrupassado o maximo de alugueresa a decorrer
   if(clienteAtual->nAlugueresAtual>MAXIMO_ALUGUERES_DECORRER-1){
     printf("O cliente já tem o máximo de guitarras alugadas permitido!!\n\n");
     return;
   }
+
   listarGuitarrasDisponiveis(listaGuitarras, totalGuitarras);
   int idTmp;
   printf("Introduza o ID da lista de guitarras a alugar:\n");
   scanf(" %d", &idTmp);
   int index=-1;
   //Procura o indice da guitarra no vetor
-  //TODO Testar
   for(int i=0; i<totalGuitarras; i++){
     //Verifica se existe e se é possivel alugar
     if(listaGuitarras[i].id==idTmp && listaGuitarras[i].estado==0){
@@ -58,11 +55,9 @@ void criarAluguer(ptrCliente listaClientes, ptrGuitarra listaGuitarras, int tota
     printf("ID da guitarra inválido!\n");
     return;
   }
-  //TODO:Verificar se pode aluguar a guitarra!! Por exemplo se for cara!!
-  //TODO:TESTARRR
   int alugueresConcluidos = clienteAtual->nAlugueresTotal - clienteAtual->nAlugueresAtual;
   if(listaGuitarras[index].valor>GUITARRAS_CARAS && alugueresConcluidos<MINIMO_GUITARRAS_BARATAS){
-    printf("O cliente ainda tem de alugar mais %d guitarras baratas até poder alugar guitarras caras!!\n\n", MINIMO_GUITARRAS_BARATAS-alugueresConcluidos);
+    printf("O cliente ainda tem de concluir mais %d alugueres de guitarras baratas até poder alugar guitarras caras!!\n\n", MINIMO_GUITARRAS_BARATAS-alugueresConcluidos);
     return;
   }
   //Cria o aluguer
@@ -164,7 +159,6 @@ int calculaDiasAtraso(int diaInicio, int mesInicio, int anoInicio, int diaEntreg
 
 
 ptrCliente concluiAluguer(ptrCliente listaClientes,int *totalClientesBanidos, int diaAtual, int mesAtual, int anoAtual){
-  //TODO: Append ficheiro binário Testar
   //TODO: Implementar data
   //TODO: Mostrar listas
   //printf("Concluir aluguer:\n1-Usar a data atual\n2-Indicar outra data\n>");
@@ -201,6 +195,14 @@ ptrCliente concluiAluguer(ptrCliente listaClientes,int *totalClientesBanidos, in
   }
   if(aluguerTmp==NULL){
     printf("O cliente não tem nenhum aluguer atual com a guitarra de ID %d!\n", idTmp);
+    return listaClientes;
+  }
+
+  //reduzir a dias
+  int diasAlugados = diaEntrega * mesEntrega - aluguerTmp->diaInicio * aluguerTmp->mesInicio;
+  //Verificar se a data esta bem introduzida
+  if(diasAlugados<0){
+    printf("Erro! Verifique a data de entrega do aluguer!!\n");
     return listaClientes;
   }
 
@@ -241,9 +243,6 @@ ptrCliente concluiAluguer(ptrCliente listaClientes,int *totalClientesBanidos, in
   aluguerTmp->mesEntrega=mesEntrega;
   aluguerTmp->anoEntrega=anoEntrega;
 
-  //TODO: Calcula a despesa final
-  //reduzir a dias
-  int diasAlugados = diaEntrega * mesEntrega - aluguerTmp->diaInicio * aluguerTmp->mesInicio;
   int total = calculaValorAluguer(diasAlugados, diasAtrasados, aluguerTmp->guitarra->estado, aluguerTmp->guitarra->precoAluguerDia, aluguerTmp->guitarra->valor);
   printf("O valor total do aluguer é %d!\n", total);
   return listaClientes;

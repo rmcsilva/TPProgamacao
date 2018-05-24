@@ -10,7 +10,6 @@ int main(int argc, char const *argv[]) {
   //TODO:REVER alocações de memoria
   //TODO: Melhorar estruras de dados, ordenar por id / nif
   //TODO:Metodo para perguntar nif ou id geral
-  //TODO:Implementar ID unico guitarras
   int dia=29, mes=5, ano=2018;
   int totalGuitarras=0;
   int totalClientesBanidos=0;

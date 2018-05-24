@@ -16,6 +16,11 @@ ptrGuitarra importaGuitarras(ptrGuitarra listaGuitarras, int *total){
   ptrGuitarra tmp;
   //TODO:Verificações ordem!
   while (fscanf(f," %d %d %d %d %[^\n]s",&id, &precoAluguerDia, &valor, &estado, nome)==5) {
+    //Verifica se o ID é único
+    if(devolveIndexGuitarra(listaGuitarras, *total, id) != -1){
+      printf("A guitarra com o ID %d no ficheiro %s já existe e vai ser ignorada, por favor verifique o ficheiro!\n", id, NOME_FICHEIRO_GUITARRAS );
+      continue;
+    }
     tmp=realloc(listaGuitarras, sizeof(guitarra)*(*total+1));
     if(tmp==NULL){
       printf("Erro de alocacao de memoria!!\n");
@@ -48,6 +53,23 @@ ptrCliente importaClientes(ptrCliente listaClientes,ptrGuitarra listaGuitarras, 
   ptrCliente listaTmp;
   ptrAluguer alugueresTmp;
   while (fscanf(f, " %d %d %[^\n]s", &nif, &nAlugueresTotal, nome)==3) {
+    //Verifica se o NIF é único, a função devolve 1 se não for
+    if(verificaCliente(listaClientes, nif)){
+      printf("O cliente com o NIF %d no ficheiro %s já existe e vai ser ignorado, por favor verifique o ficheiro!\n", nif, NOME_FICHEIRO_CLIENTES );
+      if(nAlugueresTotal>0){
+        int id,estado,diaI,mesI,anoI;
+        for(int i=0; i<nAlugueresTotal; i++) {
+          fscanf(f, " %d %d %d %d %d",&id, &estado, &diaI, &mesI, &anoI);
+          if(estado>0){
+            int diaE,mesE,anoE;
+            fscanf(f, " %d %d %d",&diaE, &mesE, &anoE);
+          }
+        }
+      }
+      continue;
+    }
+
+
     tmpCliente=malloc(sizeof(cliente));
     if(tmpCliente==NULL){
       printf("Erro de alocacao de memoria!!\n");

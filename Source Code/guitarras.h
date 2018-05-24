@@ -23,5 +23,6 @@ void listarGuitarrasDisponiveis(ptrGuitarra guitarras, int total);
 void listarGuitarrasAlugadas(ptrGuitarra guitarras, int total);
 int verificaGuitarrasDisponiveis(ptrGuitarra listaGuitarras, int total);
 int devolveIndexGuitarra(ptrGuitarra listaGuitarras, int total, int id);
+int devolveID(ptrGuitarra listaGuitarras, int total);
 
 #endif

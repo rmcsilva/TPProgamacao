@@ -90,6 +90,7 @@ void clientesMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *t
         listarClientesAtivos(*listaClientes);
         break;
       case 5:
+        listarClientesBanidos();
         break;
       case 6:
         break;
@@ -127,6 +128,8 @@ void alugueresMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *
     }
   } while(option!=4);
 }
+
+
 void printLogo(){
   printf(
 "                           ____         ___\n"
@@ -141,10 +144,10 @@ void printLogo(){
 }
 
 void printSeparador(){
-  printf("-----------------------------------------------------\n");
+  printf("-----------------------------------------------------\n\n");
 }
 
 void tecla(){
-  fflush(stdin);
-  getchar();
+  char ch;
+  scanf(" %[^\n]c", &ch);
 }

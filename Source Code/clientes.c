@@ -1,6 +1,6 @@
 #include "clientes.h"
-#include "alugueres.h"
 #include "ficheiros.h"
+#include "ui.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -9,13 +9,13 @@ ptrCliente adicionaCliente(ptrCliente listaClientes){
   //Verifica se o cliente já existe
   //TODO: Verificar nos clientes banidos!!
   do{
-    printf("Introduza o nif do novo cliente\n");
+    printf("Introduza o NIF do novo cliente\n");
     scanf(" %d", &nifTmp);
     //Se listaClientes tiver vazio não é necessario verificar
     if(listaClientes==NULL) break;
     //Verifica se o cliente já existe
     if(verificaCliente(listaClientes, nifTmp))
-      printf("O cliente com o nif %d já existe\n", nifTmp);
+      printf("O cliente com o NIF %d já existe\n", nifTmp);
     else
       break;
   }while(1);
@@ -150,6 +150,18 @@ int verificaCliente(ptrCliente listaClientes, int nif){
     if(listaClientes->nif==nif) return 1;
     listaClientes=listaClientes->prox;
   }
+
+  FILE *f;
+  f=fopen(NOME_FICHEIRO_CLIENTES_BANIDOS, "rb");
+  //Como não há clientes banidos devolve 0
+  if(f==NULL) return 0;
+
+  clienteBanido clienteBanido;
+  while (fread(&clienteBanido, sizeof(clienteBanido), 1, f)==1)
+    if (clienteBanido.nif==nif) return 1;
+
+  fclose(f);
+
   return 0;
 }
 
@@ -223,6 +235,25 @@ void listarClientesAtivos(ptrCliente listaClientes){
     printf("Nif do cliente: %d\n\n", listaClientes->nif);
     listaClientes = listaClientes->prox;
   }
+}
+
+void listarClientesBanidos(){
+  FILE *f;
+  f=fopen(NOME_FICHEIRO_CLIENTES_BANIDOS, "rb");
+  if(f==NULL){
+    printf("Erro ao abrir o ficheiro %s!\n",NOME_FICHEIRO_CLIENTES_BANIDOS);
+    return;
+  }
+  clienteBanido clienteBanido;
+  while (fread(&clienteBanido, sizeof(clienteBanido), 1, f)==1) {
+    printf("Nome do cliente: %s\n", clienteBanido.nome);
+    printf("Nif do cliente: %d\n", clienteBanido.nif);
+    printf("O cliente foi banido ");
+    clienteBanido.motivo==ATRASO ? printf("por causa de alugueres atrasados!\n")
+                                 : printf("por causa da entrega de guitarras danificadas!\n");
+    printSeparador();
+  }
+  fclose(f);
 }
 
 void listarHistoricoAluguerGuitarra(ptrCliente listaClientes, ptrGuitarra listaGuitarras, int total){

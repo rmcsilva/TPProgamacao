@@ -1,7 +1,7 @@
 #ifndef ALUGUERES_H
 #define ALUGUERES_H
 #include "guitarras.h"
-#include "clientes.h"
+typedef struct aluguer aluguer, *ptrAluguer;
 
 //Constantes alugueres
 #define MAXIMO_DIAS_MES 31
@@ -16,10 +16,27 @@
 #define MAXIMO_DIAS_ATRASO 20
 //TODO:Completar
 
-void criarAluguer(ptrCliente listaClientes, ptrGuitarra listaGuitarras, int totalGuitarras, int diaAtual, int mesAtual, int anoAtual);
-ptrCliente concluiAluguer(ptrCliente listaClientes, int *totalClientesBanidos, int diaAtual, int mesAtual, int anoAtual);
+//Constantes estado estrutura aluguer
+#define DECORRER 0
+#define ENTREGUE 1
+#define ENTREGA_DANIFICADA 2
+
+struct aluguer{
+  ptrGuitarra guitarra;
+  int estado;
+  //Data inicio
+  int diaInicio;
+  int mesInicio;
+  int anoInicio;
+  //Data entrega
+  int diaEntrega;
+  int mesEntrega;
+  int anoEntrega;
+  //TODO: dias de atraso
+  ptrAluguer prox;
+};
+
 void limiteAluguer(int diaAtual, int mesAtual, int anoAtual);
-void listarAlugueresDecorrer(ptrCliente listaClientes);
 int calculaDiasAtraso(int diaInicio, int mesInicio, int anoInicio, int diaEntrega, int mesEntrega, int anoEntrega);
 int calculaValorAluguer(int diasAlugados,int diasAtrasados,int estado, int precoAluguerDia, int valorGuitarra);
 #endif
