@@ -137,7 +137,9 @@ ptrCliente banirCliente(ptrCliente listaClientes,int *totalClientesBanidos, int 
   else
     clienteAnterior->prox = clienteAtual->prox;
   free(clienteAtual);
-  printf("Cliente com o nif %d foi banido!\n\n",nif);
+  printf("Cliente com o nif %d foi banido ",nif);
+  motivo==ATRASO ? printf("por causa de alugueres atrasados!\n\n")
+                 : printf("por causa da entrega de guitarras danificadas!\n\n");
   return listaClientes;
 }
 

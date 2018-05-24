@@ -193,8 +193,8 @@ ptrCliente concluiAluguer(ptrCliente listaClientes,int *totalClientesBanidos, in
 
   ptrAluguer aluguerTmp = clienteAtual->alugueres;
   while (aluguerTmp!=NULL) {
-    if(aluguerTmp->guitarra->id==idTmp){
-      //encontra o aluguer certo com o ID da guitarra indicado
+    if(aluguerTmp->guitarra->id==idTmp && aluguerTmp->estado==DECORRER){
+      //encontra o aluguer que ainda está a decorrer com o ID da guitarra indicado
       break;
     }
     aluguerTmp=aluguerTmp->prox;
@@ -242,12 +242,25 @@ ptrCliente concluiAluguer(ptrCliente listaClientes,int *totalClientesBanidos, in
   aluguerTmp->anoEntrega=anoEntrega;
 
   //TODO: Calcula a despesa final
-
+  //reduzir a dias
+  int diasAlugados = diaEntrega * mesEntrega - aluguerTmp->diaInicio * aluguerTmp->mesInicio;
+  int total = calculaValorAluguer(diasAlugados, diasAtrasados, aluguerTmp->guitarra->estado, aluguerTmp->guitarra->precoAluguerDia, aluguerTmp->guitarra->valor);
+  printf("O valor total do aluguer é %d!\n", total);
   return listaClientes;
 }
 
 int calculaValorAluguer(int diasAlugados,int diasAtrasados,int estado, int precoAluguerDia, int valorGuitarra){
   int total=0;
-  //TODO: Implementar
+  //Se a guitarra estiver danificada o seu valor é acrescentado ao total
+  if(estado==DANIFICADA)
+    total += valorGuitarra;
+
+  if(diasAlugados>0){
+    //Casa nao haja dias atrasados o resultado não é influenciado por é somado 0
+    total += diasAlugados*precoAluguerDia + diasAtrasados*MULTA;
+  }else{
+    //casos o dia de entrega seja igual ao dia de aluguer
+    total += precoAluguerDia;
+  }
   return total;
 }

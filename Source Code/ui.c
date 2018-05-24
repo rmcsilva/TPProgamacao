@@ -143,3 +143,8 @@ void printLogo(){
 void printSeparador(){
   printf("-----------------------------------------------------\n");
 }
+
+void tecla(){
+  fflush(stdin);
+  getchar();
+}

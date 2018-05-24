@@ -10,4 +10,5 @@ void clientesMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *t
 void alugueresMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *totalGuitarras, int *totalClientesBanidos, int diaAtual, int mesAtual, int anoAtual);
 void printLogo();
 void printSeparador();
+void tecla();
 #endif
