@@ -17,8 +17,9 @@
 //TODO:Completar
 
 void criarAluguer(ptrCliente listaClientes, ptrGuitarra listaGuitarras, int totalGuitarras, int diaAtual, int mesAtual, int anoAtual);
-ptrCliente concluiAluguer(ptrCliente listaClientes, int diaAtual, int mesAtual, int anoAtual);
+ptrCliente concluiAluguer(ptrCliente listaClientes, int *totalClientesBanidos, int diaAtual, int mesAtual, int anoAtual);
 void limiteAluguer(int diaAtual, int mesAtual, int anoAtual);
 void listarAlugueresDecorrer(ptrCliente listaClientes);
 int calculaDiasAtraso(int diaInicio, int mesInicio, int anoInicio, int diaEntrega, int mesEntrega, int anoEntrega);
+int calculaValorAluguer(int diasAlugados,int diasAtrasados,int estado, int precoAluguerDia, int valorGuitarra);
 #endif

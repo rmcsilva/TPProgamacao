@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void mainMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *totalGuitarras, int diaAtual, int mesAtual, int anoAtual){
+void mainMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *totalGuitarras, int *totalClientesBanidos,int diaAtual, int mesAtual, int anoAtual){
   //TODO: Implementar a mudança de data
   int option=0;
 
@@ -18,7 +18,7 @@ void mainMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *total
         clientesMenu(listaClientes, listaGuitarras, totalGuitarras);
         break;
       case 3:
-        alugueresMenu(listaClientes, listaGuitarras, totalGuitarras, diaAtual, mesAtual, anoAtual);
+        alugueresMenu(listaClientes, listaGuitarras, totalGuitarras, totalClientesBanidos,diaAtual, mesAtual, anoAtual);
         break;
 
       case 4:
@@ -99,7 +99,7 @@ void clientesMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *t
   } while(option!=6);
 }
 
-void alugueresMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *totalGuitarras, int diaAtual, int mesAtual, int anoAtual){
+void alugueresMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *totalGuitarras, int *totalClientesBanidos, int diaAtual, int mesAtual, int anoAtual){
   int option=0;
   do {
     printLogo();
@@ -114,7 +114,7 @@ void alugueresMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *
         criarAluguer(*listaClientes, *listaGuitarras, *totalGuitarras, diaAtual, mesAtual, anoAtual);
         break;
       case 2:
-
+        *listaClientes=concluiAluguer(*listaClientes, totalClientesBanidos, diaAtual, mesAtual, anoAtual);
         break;
       case 3:
         listarAlugueresDecorrer(*listaClientes);

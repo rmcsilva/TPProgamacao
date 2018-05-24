@@ -104,7 +104,6 @@ void limiteAluguer(int diaAtual, int mesAtual, int anoAtual){
   diaAtual += MAXIMO_DIAS_ALUGUER;
   if(diaAtual > MAXIMO_DIAS_MES){
     diaAtual -= MAXIMO_DIAS_MES;
-    mesAtual++;
     if(mesAtual > 12){
       mesAtual=1;
       anoAtual++;
@@ -164,13 +163,14 @@ int calculaDiasAtraso(int diaInicio, int mesInicio, int anoInicio, int diaEntreg
 }
 
 
-ptrCliente concluiAluguer(ptrCliente listaClientes, int diaAtual, int mesAtual, int anoAtual){
-  //TODO: Append ficheiro binário
+ptrCliente concluiAluguer(ptrCliente listaClientes,int *totalClientesBanidos, int diaAtual, int mesAtual, int anoAtual){
+  //TODO: Append ficheiro binário Testar
   //TODO: Implementar data
+  //TODO: Mostrar listas
   //printf("Concluir aluguer:\n1-Usar a data atual\n2-Indicar outra data\n>");
   int diaEntrega=diaAtual, mesEntrega=mesAtual, anoEntrega=anoAtual;
   int nifTmp;
-  printf("Introduza o nif do cliente que deseja criar o aluguer: \n");
+  printf("Introduza o nif do cliente que deseja concluir o aluguer: \n");
   scanf(" %d",&nifTmp);
   ptrCliente clienteAtual=listaClientes;
   //Encontra o cliente com o nif indicado
@@ -207,29 +207,47 @@ ptrCliente concluiAluguer(ptrCliente listaClientes, int diaAtual, int mesAtual, 
   int diasAtrasados=calculaDiasAtraso(aluguerTmp->diaInicio, aluguerTmp->mesInicio, aluguerTmp->anoInicio, diaEntrega, mesEntrega, anoEntrega);
   if(diasAtrasados>MAXIMO_DIAS_ATRASO){
     //Bane o cliente
-    return banirCliente(listaClientes, idTmp);
+    return banirCliente(listaClientes, totalClientesBanidos, nifTmp, ATRASO);
   }else if (diasAtrasados>0){
-    clienteAtual->nEntregasAtrasadas;
+    clienteAtual->nEntregasAtrasadas++;
   }
 
   int estado;
   printf("Verifique o estado da guitarra:\n1-Perfeitas Condicoes\n2-Danificada\n>");
   scanf(" %d",&estado);
   if (estado==1) {
-    aluguerTmp->guitarra->estado=ENTREGUE;
+    //Atualizar o estado do aluguer
+    aluguerTmp->estado=ENTREGUE;
+    //altera estado da guitarra para disponivel, pois está em boas condicoes
+    aluguerTmp->guitarra->estado=DISPONIVEL;
   }else if(estado==2) {
-    aluguerTmp->guitarra->estado=ENTREGA_DANIFICADA;
+    //Atualizar o estado do aluguer
+    aluguerTmp->estado=ENTREGA_DANIFICADA;
+    //altera estado da guitarra para danificada
+    aluguerTmp->guitarra->estado=DANIFICADA;
     clienteAtual->nEntregasDanificadas++;
     //Bane o cliente
     if(clienteAtual->nEntregasDanificadas>MAXIMO_GUITARRAS_DANIFICADAS){
-      return banirCliente(listaClientes, idTmp);
+      return banirCliente(listaClientes, totalClientesBanidos, nifTmp, GUITARRAS_DANIFICADAS);
     }
   }else{
     printf("Estado invalido!!\n\n");
   }
+
   //Reduz o numero de alugueres a decorrer
   clienteAtual->nAlugueresAtual--;
+  //Atualiza os dados da entrega do aluguer
+  aluguerTmp->diaEntrega=diaEntrega;
+  aluguerTmp->mesEntrega=mesEntrega;
+  aluguerTmp->anoEntrega=anoEntrega;
+
   //TODO: Calcula a despesa final
 
   return listaClientes;
+}
+
+int calculaValorAluguer(int diasAlugados,int diasAtrasados,int estado, int precoAluguerDia, int valorGuitarra){
+  int total=0;
+  //TODO: Implementar
+  return total;
 }

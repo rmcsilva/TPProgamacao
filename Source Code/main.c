@@ -13,11 +13,14 @@ int main(int argc, char const *argv[]) {
   //TODO:Implementar ID unico guitarras
   int dia=29, mes=5, ano=2018;
   int totalGuitarras=0;
+  int totalClientesBanidos=0;
   ptrGuitarra listaGuitarras=NULL;
   ptrCliente listaClientes=NULL;
+
   listaGuitarras=importaGuitarras(listaGuitarras,&totalGuitarras);
   listaClientes=importaClientes(listaClientes,listaGuitarras, totalGuitarras);
-  mainMenu(&listaClientes, &listaGuitarras, &totalGuitarras, dia, mes, ano);
+  importaTotalClientesBanidos(&totalClientesBanidos);
+  mainMenu(&listaClientes, &listaGuitarras, &totalGuitarras, &totalClientesBanidos, dia, mes, ano);
   exportaDados(listaClientes, listaGuitarras, totalGuitarras);
 
   freeCliente(&listaClientes);

@@ -48,7 +48,7 @@ typedef struct clienteBanido{
 //Métodos clientes
 ptrCliente adicionaCliente(ptrCliente listaClientes);
 ptrCliente removeCliente(ptrCliente listaClientes);
-ptrCliente banirCliente(ptrCliente listaClientes, int nif);
+ptrCliente banirCliente(ptrCliente listaClientes,int *totalClientesBanidos, int nif, int motivo);
 void listarClientesAtivos(ptrCliente listaClientes);
 int verificaCliente(ptrCliente listaClientes, int nif);
 void mostraCliente(ptrCliente listaClientes);

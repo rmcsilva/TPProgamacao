@@ -10,7 +10,7 @@ ptrGuitarra importaGuitarras(ptrGuitarra listaGuitarras, int *total){
   int id,precoAluguerDia,valor,estado;
   char nome[100];
   if(f==NULL){
-    printf("Erro ao abrir o ficheiro guitarras.txt!\n");
+    printf("Erro ao abrir o ficheiro %s!\n",NOME_FICHEIRO_GUITARRAS);
     return listaGuitarras;
   }
   ptrGuitarra tmp;
@@ -38,7 +38,7 @@ ptrCliente importaClientes(ptrCliente listaClientes,ptrGuitarra listaGuitarras, 
   FILE *f;
   f=fopen(NOME_FICHEIRO_CLIENTES, "r");
   if(f==NULL){
-    printf("Erro ao abrir o ficheiro clientes.txt!\n");
+    printf("Erro ao abrir o ficheiro %s!\n",NOME_FICHEIRO_CLIENTES);
     return listaClientes;
   }
   //TODO:ADD VERIFICACOES
@@ -162,5 +162,43 @@ void exportaDados(ptrCliente listaClientes,ptrGuitarra listaGuitarras, int total
     listaClientes=listaClientes->prox;
   }
   fclose(f);
+}
 
+void importaTotalClientesBanidos(int *totalClientesBanidos){
+  FILE *f;
+  f=fopen(NOME_FICHEIRO_CLIENTES_BANIDOS, "rb");
+  if(f==NULL){
+    printf("Erro ao abrir o ficheiro %s!\n",NOME_FICHEIRO_CLIENTES_BANIDOS);
+    return;
+  }
+  clienteBanido clienteBanido;
+  //Fazer desta forma pois ao guardar o inteiro é facilmente alterável
+  while(fread(&clienteBanido, sizeof(clienteBanido), 1, f)==1)
+    (*totalClientesBanidos)++;
+  //Devolve número total de clientes banidos
+  printf("Clientes banidos importados com sucesso\n");
+  return;
+  fclose(f);
+}
+
+void adicionaClienteBanido(int *totalClientesBanidos, char nome[100], int nif, int motivo){
+  FILE *f;
+  f=fopen(NOME_FICHEIRO_CLIENTES_BANIDOS, "ab");
+  if(f==NULL){
+    printf("Erro ao abrir o ficheiro %s!\n",NOME_FICHEIRO_CLIENTES_BANIDOS);
+    return;
+  }
+  clienteBanido clienteBanido;
+  strcpy(clienteBanido.nome, nome);
+  clienteBanido.nif=nif;
+  clienteBanido.motivo=motivo;
+  //Append abre o ficheiro no final,logo é só adicionar
+  if(fwrite(&clienteBanido, sizeof(clienteBanido), 1, f)==1){
+    (*totalClientesBanidos)++;
+    return;
+  }else{
+    printf("Erro ao adiconar cliente banido no ficheiro %s!\n",NOME_FICHEIRO_CLIENTES_BANIDOS);
+    return;
+  }
+  fclose(f);
 }

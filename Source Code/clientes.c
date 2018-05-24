@@ -1,12 +1,13 @@
 #include "clientes.h"
 #include "alugueres.h"
-
+#include "ficheiros.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 ptrCliente adicionaCliente(ptrCliente listaClientes){
   int nifTmp;
   //Verifica se o cliente já existe
+  //TODO: Verificar nos clientes banidos!!
   do{
     printf("Introduza o nif do novo cliente\n");
     scanf(" %d", &nifTmp);
@@ -106,7 +107,7 @@ ptrCliente removeCliente(ptrCliente listaClientes){
   return listaClientes;
 }
 
-ptrCliente banirCliente(ptrCliente listaClientes, int nif){
+ptrCliente banirCliente(ptrCliente listaClientes,int *totalClientesBanidos, int nif, int motivo){
   //TODO: Atualizar o ficheiro binários
   ptrCliente clienteAtual,clienteAnterior=NULL;
   clienteAtual = listaClientes;
@@ -128,13 +129,15 @@ ptrCliente banirCliente(ptrCliente listaClientes, int nif){
       free(aluguerAtual);
     }
   }
+
+  adicionaClienteBanido(totalClientesBanidos, clienteAtual->nome, clienteAtual->nif, motivo);
   //Se a lista só tive um nó então o anterior está a null
   if(clienteAnterior==NULL)
     listaClientes=clienteAtual->prox;
   else
     clienteAnterior->prox = clienteAtual->prox;
   free(clienteAtual);
-  printf("Cliente com o nif %d foi banido!\n\n",nifCliente);
+  printf("Cliente com o nif %d foi banido!\n\n",nif);
   return listaClientes;
 }
 
