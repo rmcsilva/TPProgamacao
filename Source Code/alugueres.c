@@ -3,21 +3,34 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void criarAluguer(ptrCliente listaClientes, ptrGuitarra listaGuitarras, int totalGuitarras, int diaAtual, int mesAtual, int anoAtual){
-  //TODO:FALTA VERIFICACOES
+ptrCliente criarAluguer(ptrCliente listaClientes, ptrGuitarra listaGuitarras, int totalGuitarras, int *totalClientesBanidos, int diaAtual, int mesAtual, int anoAtual){
+  //TODO: Verificar banir!
   if(listaClientes==NULL){
     printf("Não existem clientes!\n\n");
-    return;
+    return listaClientes;
   }
   if(listaGuitarras==NULL){
     printf("Não existem guitarras!\n\n");
-    return;
+    return listaClientes;
   }
   //Verifca se há guitarras disponiveis;
   if(verificaGuitarrasDisponiveis(listaGuitarras, totalGuitarras)==0){
     printf("Não existem guitarras disponiveis!\n\n");
-    return;
+    return listaClientes;
   }
+
+  int opcao;
+  printf("Escolha a opção desejada para concluir o aluguer:\n1-Usar a data atual\n2-Indicar outra data\n>");
+  scanf(" %d", &opcao);
+  if(opcao==1){
+  }else if(opcao==2){
+    printf("Introduza a data de conclusao do aluguer!\n");
+    alteraData(&diaAtual, &mesAtual, &anoAtual);
+  }else{
+    printf("Opção inválida!\n");
+    return listaClientes;
+  }
+
   int nifTmp;
   ptrCliente clienteAtual=listaClientes;
   listarClientesAtivos(listaClientes);
@@ -29,12 +42,30 @@ void criarAluguer(ptrCliente listaClientes, ptrGuitarra listaGuitarras, int tota
   }
   if(clienteAtual==NULL){
     printf("O cliente não existe\n\n");
-    return;
+    return listaClientes;
   }
+
+  //Verifica se o cliente ultrapassou o máximo guitarras danificadas
+  if(clienteAtual->nEntregasDanificadas>MAXIMO_GUITARRAS_DANIFICADAS){
+    return banirCliente(listaClientes, totalClientesBanidos, clienteAtual->nif, GUITARRAS_DANIFICADAS);
+  }
+
   //Verifca se ao realizar o aluguer atual é ultrupassado o maximo de alugueresa a decorrer
   if(clienteAtual->nAlugueresAtual>MAXIMO_ALUGUERES_DECORRER-1){
     printf("O cliente já tem o máximo de guitarras alugadas permitido!!\n\n");
-    return;
+    return listaClientes;
+  }
+
+  //Verificar se os alugueres do cliente estão atrasados
+  ptrAluguer listaAlugueres = clienteAtual->alugueres;
+  while (listaAlugueres!=NULL) {
+    if(listaAlugueres->estado>DECORRER){
+      if(calculaDiasAtraso(listaAlugueres->diaInicio, listaAlugueres->mesInicio, listaAlugueres->anoInicio,
+                           listaAlugueres->diaEntrega, listaAlugueres->mesEntrega, listaAlugueres->anoEntrega)>MAXIMO_DIAS_ATRASO){
+        return banirCliente(listaClientes, totalClientesBanidos, clienteAtual->nif, ATRASO);
+      }
+    }
+    listaAlugueres=listaAlugueres->prox;
   }
 
   listarGuitarrasDisponiveis(listaGuitarras, totalGuitarras);
@@ -53,18 +84,18 @@ void criarAluguer(ptrCliente listaClientes, ptrGuitarra listaGuitarras, int tota
   //verifica se o indice está correto
   if(index == -1){
     printf("ID da guitarra inválido!\n");
-    return;
+    return listaClientes;
   }
   int alugueresConcluidos = clienteAtual->nAlugueresTotal - clienteAtual->nAlugueresAtual;
   if(listaGuitarras[index].valor>GUITARRAS_CARAS && alugueresConcluidos<MINIMO_GUITARRAS_BARATAS){
     printf("O cliente ainda tem de concluir mais %d alugueres de guitarras baratas até poder alugar guitarras caras!!\n\n", MINIMO_GUITARRAS_BARATAS-alugueresConcluidos);
-    return;
+    return listaClientes;
   }
   //Cria o aluguer
   ptrAluguer tmp = malloc(sizeof(aluguer));
   if(tmp==NULL){
     printf("Erro de alocacao de memoria!!\n");
-    return;
+    return listaClientes;
   }
   //Atualiza estados
   clienteAtual->nAlugueresAtual++;
@@ -85,14 +116,14 @@ void criarAluguer(ptrCliente listaClientes, ptrGuitarra listaGuitarras, int tota
   //Verifica se não existem alugueres
   if(clienteAtual->alugueres==NULL){
     clienteAtual->alugueres=tmp;
-    return;
+    return listaClientes;
   }
   ptrAluguer listaTmp = clienteAtual->alugueres;
   //Procura o ultimo aluguer
   while (listaTmp->prox!=NULL) listaTmp=listaTmp->prox;
   //Coloca o aluguer na ultima posição
   listaTmp->prox=tmp;
-  return;
+  return listaClientes;
 }
 
 void limiteAluguer(int diaAtual, int mesAtual, int anoAtual){
@@ -135,6 +166,23 @@ void listarAlugueresDecorrer(ptrCliente listaClientes){
   }
 }
 
+//devolve o numero de alugueres a decorrer
+int devolveAlugueresDecorrer(ptrCliente listaClientes){
+  int count=0;
+  while (listaClientes!=NULL) {
+    ptrAluguer tmp=listaClientes->alugueres;
+
+    while(tmp!=NULL){
+      if(tmp->estado==DECORRER){
+        count++;
+      }
+      tmp=tmp->prox;
+    }
+    listaClientes=listaClientes->prox;
+  }
+  return count;
+}
+
 int calculaDiasAtraso(int diaInicio, int mesInicio, int anoInicio, int diaEntrega, int mesEntrega, int anoEntrega){
   int diasAtrasados, totalDiasInicio, totalDiasEntrega;
   //TODO:Banir cliente
@@ -158,13 +206,17 @@ int calculaDiasAtraso(int diaInicio, int mesInicio, int anoInicio, int diaEntreg
 }
 
 
+
 ptrCliente concluiAluguer(ptrCliente listaClientes,int *totalClientesBanidos, int diaAtual, int mesAtual, int anoAtual){
-  //TODO: Implementar data
-  //TODO: Mostrar listas
-  //printf("Concluir aluguer:\n1-Usar a data atual\n2-Indicar outra data\n>");
-  int diaEntrega=diaAtual, mesEntrega=mesAtual, anoEntrega=anoAtual;
+  //Verifica se há alugueres
+  if(devolveAlugueresDecorrer(listaClientes)==0){
+    printf("Não há alugueres a decorrer!\n\n");
+    return listaClientes;
+  }
+
+  listarAlugueresDecorrer(listaClientes);
   int nifTmp;
-  printf("Introduza o nif do cliente que deseja concluir o aluguer: \n");
+  printf("Introduza o NIF do cliente que deseja concluir o aluguer: \n");
   scanf(" %d",&nifTmp);
   ptrCliente clienteAtual=listaClientes;
   //Encontra o cliente com o nif indicado
@@ -181,7 +233,6 @@ ptrCliente concluiAluguer(ptrCliente listaClientes,int *totalClientesBanidos, in
   }
 
   int idTmp;
-  //TODO: Imprimir lista guitarras está na função a cima
   printf("Introduza o ID da lista de guitarras alugadas ao cliente:\n");
   scanf(" %d", &idTmp);
 
@@ -198,8 +249,24 @@ ptrCliente concluiAluguer(ptrCliente listaClientes,int *totalClientesBanidos, in
     return listaClientes;
   }
 
+  //Opçao de mudar a data
+  int opcao, diaEntrega, mesEntrega, anoEntrega;
+  printf("Escolha a opção desejada para concluir o aluguer:\n1-Usar a data atual\n2-Indicar outra data\n>");
+  scanf(" %d", &opcao);
+  if(opcao==1){
+    diaEntrega=diaAtual;
+    mesEntrega=mesAtual;
+    anoEntrega=anoAtual;
+  }else if(opcao==2){
+    printf("Introduza a data de conclusao do aluguer!\n");
+    alteraData(&diaEntrega, &mesEntrega, &anoEntrega);
+  }else{
+    printf("Opção inválida!\n");
+    return listaClientes;
+  }
+
   //reduzir a dias
-  int diasAlugados = diaEntrega * mesEntrega - aluguerTmp->diaInicio * aluguerTmp->mesInicio;
+  int diasAlugados = (diaEntrega + mesEntrega * MAXIMO_DIAS_MES) - (aluguerTmp->diaInicio + aluguerTmp->mesInicio * MAXIMO_DIAS_MES);
   //Verificar se a data esta bem introduzida
   if(diasAlugados<0){
     printf("Erro! Verifique a data de entrega do aluguer!!\n");
@@ -243,8 +310,11 @@ ptrCliente concluiAluguer(ptrCliente listaClientes,int *totalClientesBanidos, in
   aluguerTmp->mesEntrega=mesEntrega;
   aluguerTmp->anoEntrega=anoEntrega;
 
+  printf("Aluguer concluido em %d dias", diasAlugados+diasAtrasados);
+  diasAtrasados==0 ? printf(",sem atrasos!") : printf(",com %d dias de atraso!", diasAtrasados);
+  //TODO: Acrescentar se foi danificada?
   int total = calculaValorAluguer(diasAlugados, diasAtrasados, aluguerTmp->guitarra->estado, aluguerTmp->guitarra->precoAluguerDia, aluguerTmp->guitarra->valor);
-  printf("O valor total do aluguer é %d!\n", total);
+  printf("\nO valor total do aluguer é de %d$!\n", total);
   return listaClientes;
 }
 

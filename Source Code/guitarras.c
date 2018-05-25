@@ -80,6 +80,7 @@ void listarGuitarrasAlugadas(ptrGuitarra guitarras, int total){
   }
 }
 
+//Devolve um ID unico para as guitarras
 int devolveID(ptrGuitarra listaGuitarras, int total){
   int id;
   do {

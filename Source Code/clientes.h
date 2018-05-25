@@ -35,9 +35,10 @@ int verificaCliente(ptrCliente listaClientes, int nif);
 void mostraCliente(ptrCliente listaClientes);
 void freeCliente(ptrCliente* listaClientes);
 //Métodos Alugueres
-void criarAluguer(ptrCliente listaClientes, ptrGuitarra listaGuitarras, int totalGuitarras, int diaAtual, int mesAtual, int anoAtual);
+ptrCliente criarAluguer(ptrCliente listaClientes, ptrGuitarra listaGuitarras, int totalGuitarras, int *totalClientesBanidos, int diaAtual, int mesAtual, int anoAtual);
 ptrCliente concluiAluguer(ptrCliente listaClientes, int *totalClientesBanidos, int diaAtual, int mesAtual, int anoAtual);
 void listarAlugueresDecorrer(ptrCliente listaClientes);
+int devolveAlugueresDecorrer(ptrCliente listaClientes);
 //Métodos Guitarras
 void listarHistoricoAluguerGuitarra(ptrCliente listaClientes, ptrGuitarra listaGuitarras, int total);
 #endif

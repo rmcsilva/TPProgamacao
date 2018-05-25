@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//TODO CLIENTES BANIDOS!!
 ptrGuitarra importaGuitarras(ptrGuitarra listaGuitarras, int *total){
   FILE *f;
   f=fopen(NOME_FICHEIRO_GUITARRAS, "r");

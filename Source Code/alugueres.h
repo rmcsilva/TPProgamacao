@@ -14,7 +14,6 @@ typedef struct aluguer aluguer, *ptrAluguer;
 //Constantes banir
 #define MAXIMO_GUITARRAS_DANIFICADAS 3
 #define MAXIMO_DIAS_ATRASO 20
-//TODO:Completar
 
 //Constantes estado estrutura aluguer
 #define DECORRER 0
