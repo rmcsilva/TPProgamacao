@@ -8,6 +8,7 @@
 int main(int argc, char const *argv[]) {
   //TODO:REVER alocações de memoria
   //TODO: Melhorar estruras de dados, ordenar por id / nif
+  //TODO: Bug nas datas, mês de dezembro porque muda de ano!
   int dia, mes, ano;
   int totalGuitarras=0;
   int totalClientesBanidos=0;

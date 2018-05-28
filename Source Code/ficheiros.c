@@ -198,8 +198,8 @@ void importaTotalClientesBanidos(int *totalClientesBanidos){
     (*totalClientesBanidos)++;
   //Devolve número total de clientes banidos
   printf("Clientes banidos importados com sucesso\n");
-  return;
   fclose(f);
+  return;
 }
 
 void adicionaClienteBanido(int *totalClientesBanidos, char nome[100], int nif, int motivo){
@@ -216,10 +216,9 @@ void adicionaClienteBanido(int *totalClientesBanidos, char nome[100], int nif, i
   //Append abre o ficheiro no final,logo é só adicionar
   if(fwrite(&clienteBanido, sizeof(clienteBanido), 1, f)==1){
     (*totalClientesBanidos)++;
-    return;
   }else{
     printf("Erro ao adiconar cliente banido no ficheiro %s!\n",NOME_FICHEIRO_CLIENTES_BANIDOS);
-    return;
   }
   fclose(f);
+  return;
 }

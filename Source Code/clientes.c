@@ -254,6 +254,7 @@ void listarClientesBanidos(){
     printSeparador();
   }
   fclose(f);
+  return;
 }
 
 void listarHistoricoAluguerGuitarra(ptrCliente listaClientes, ptrGuitarra listaGuitarras, int total){
