@@ -211,28 +211,33 @@ void mostraCliente(ptrCliente listaClientes){
 
   while(listaClientes != NULL){
     if(listaClientes->nif==nifTmp){
-      printf("Nome do cliente: %s\n", listaClientes->nome);
+      printf("\nNome do cliente: %s\n", listaClientes->nome);
       printf("Número de guitarras em sua posse: %d\n", listaClientes->nAlugueresAtual);
       printf("Número de alugueres total do cliente: %d\n", listaClientes->nAlugueresTotal);
       printf("Número de entregas atrasadas: %d\n", listaClientes->nEntregasAtrasadas);
       printf("Número de entregas danificadas: %d\n\n", listaClientes->nEntregasDanificadas);
+      printSeparador();
       break;
     }
     listaClientes = listaClientes->prox;
   }
-  if(listaClientes==NULL)
-    printf("O cliente não existe!\n\n");
+  if(listaClientes==NULL){
+    printf("\nO cliente não existe!\n\n");
+    printSeparador();
+  }
 
 }
 
 void listarClientesAtivos(ptrCliente listaClientes){
   if(listaClientes==NULL){
     printf("Não existem clientes!\n\n");
+    printSeparador();
     return;
   }
   while(listaClientes != NULL){
     printf("Nome do cliente: %s\n", listaClientes->nome);
     printf("Nif do cliente: %d\n\n", listaClientes->nif);
+    printSeparador();
     listaClientes = listaClientes->prox;
   }
 }
@@ -242,6 +247,7 @@ void listarClientesBanidos(){
   f=fopen(NOME_FICHEIRO_CLIENTES_BANIDOS, "rb");
   if(f==NULL){
     printf("Erro ao abrir o ficheiro %s!\n",NOME_FICHEIRO_CLIENTES_BANIDOS);
+    printSeparador();
     return;
   }
   clienteBanido clienteBanido;
@@ -249,8 +255,8 @@ void listarClientesBanidos(){
     printf("Nome do cliente: %s\n", clienteBanido.nome);
     printf("Nif do cliente: %d\n", clienteBanido.nif);
     printf("O cliente foi banido ");
-    clienteBanido.motivo==ATRASO ? printf("por causa de alugueres atrasados!\n")
-                                 : printf("por causa da entrega de guitarras danificadas!\n");
+    clienteBanido.motivo==ATRASO ? printf("por causa de alugueres atrasados!\n\n")
+                                 : printf("por causa da entrega de guitarras danificadas!\n\n");
     printSeparador();
   }
   fclose(f);
@@ -262,11 +268,13 @@ void listarHistoricoAluguerGuitarra(ptrCliente listaClientes, ptrGuitarra listaG
 
   if(listaGuitarras==NULL){
     printf("Não existem guitarras!!\n\n");
+    printSeparador();
     return;
   }
 
   if(listaClientes==NULL){
     printf("Não existem clientes!\n\n");
+    printSeparador();
     return;
   }
 
@@ -274,6 +282,7 @@ void listarHistoricoAluguerGuitarra(ptrCliente listaClientes, ptrGuitarra listaG
   scanf(" %d", &idTmp);
   if(devolveIndexGuitarra(listaGuitarras, total, idTmp) == -1){
     printf("A guitarra não existe!!\n");
+    printSeparador();
     return;
   }
   while (listaClientes!=NULL) {
@@ -288,14 +297,17 @@ void listarHistoricoAluguerGuitarra(ptrCliente listaClientes, ptrGuitarra listaG
         int diasAtraso=calculaDiasAtraso(tmpAluguer->diaInicio, tmpAluguer->mesInicio, tmpAluguer->anoInicio, tmpAluguer->diaEntrega, tmpAluguer->mesEntrega, tmpAluguer->anoEntrega);
         //TODO: Banir cliente se dias de atraso exceder a 20?
         diasAtraso==0 ? printf("Emprestimo concluido sem dias de atraso!\n\n") : printf("Emprestimo concluido com %d dias de atraso!!\n\n", diasAtraso);
+        printSeparador();
       }
       tmpAluguer=tmpAluguer->prox;
     }
     listaClientes=listaClientes->prox;
   }
 
-  if(count==0)
-    printf("A guitarra com o id %d, ainda não tem historico!\n", idTmp);
+  if(count==0){
+    printf("A guitarra com o id %d, ainda não tem historico!\n\n", idTmp);
+    printSeparador();
+  }
 
   return;
 }

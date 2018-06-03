@@ -1,5 +1,6 @@
 #include "alugueres.h"
 #include "guitarras.h"
+#include "ui.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -44,13 +45,15 @@ void listarGuitarras(ptrGuitarra guitarras, int total){
 
     printf("ID da guitarra: %d\n", guitarras[i].id);
     printf("Preco do aluguer da guitarra por dia: %d\n", guitarras[i].precoAluguerDia);
-    printf("Valor da Guitarra: %d\n\n\n", guitarras[i].valor);
+    printf("Valor da Guitarra: %d\n\n", guitarras[i].valor);
+    printSeparador();
   }
 }
 
 void listarGuitarrasDisponiveis(ptrGuitarra guitarras, int total){
   if(guitarras==NULL){
     printf("Não existem guitarras!!\n\n");
+    printSeparador();
     return;
   }
   printf("Guitarras disponiveis:\n");
@@ -59,7 +62,8 @@ void listarGuitarrasDisponiveis(ptrGuitarra guitarras, int total){
       printf("Nome da guitarra: %s\n", guitarras[i].nome);
       printf("ID da guitarra: %d\n", guitarras[i].id);
       printf("Preco do aluguer da guitarra por dia: %d\n", guitarras[i].precoAluguerDia);
-      printf("Valor da Guitarra: %d\n\n\n", guitarras[i].valor);
+      printf("Valor da Guitarra: %d\n\n", guitarras[i].valor);
+      printSeparador();
     }
   }
 }
@@ -67,6 +71,7 @@ void listarGuitarrasDisponiveis(ptrGuitarra guitarras, int total){
 void listarGuitarrasAlugadas(ptrGuitarra guitarras, int total){
   if(guitarras==NULL){
     printf("Não existem guitarras!!\n\n");
+    printSeparador();
     return;
   }
   printf("Guitarras Alugadas:\n");
@@ -75,7 +80,8 @@ void listarGuitarrasAlugadas(ptrGuitarra guitarras, int total){
       printf("Nome da guitarra: %s\n", guitarras[i].nome);
       printf("ID da guitarra: %d\n", guitarras[i].id);
       printf("Preco do aluguer da guitarra por dia: %d\n", guitarras[i].precoAluguerDia);
-      printf("Valor da Guitarra: %d\n\n\n", guitarras[i].valor);
+      printf("Valor da Guitarra: %d\n\n", guitarras[i].valor);
+      printSeparador();
     }
   }
 }

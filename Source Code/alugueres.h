@@ -36,6 +36,7 @@ struct aluguer{
 };
 
 void limiteAluguer(int diaAtual, int mesAtual, int anoAtual);
+int calculaDias(int dia, int mes, int ano);
 int calculaDiasAtraso(int diaInicio, int mesInicio, int anoInicio, int diaEntrega, int mesEntrega, int anoEntrega);
 int calculaValorAluguer(int diasAlugados,int diasAtrasados,int estado, int precoAluguerDia, int valorGuitarra);
 #endif

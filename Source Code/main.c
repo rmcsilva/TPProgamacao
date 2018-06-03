@@ -6,9 +6,9 @@
 #include <stdlib.h>
 
 int main(int argc, char const *argv[]) {
-  //TODO:REVER alocações de memoria
-  //TODO: Melhorar estruras de dados, ordenar por id / nif
-  //TODO: Bug nas datas, mês de dezembro porque muda de ano!
+  //TODO: Acrescentar cliente banido por atraso e guitarras danificadas
+  //TODO: Melhorar UI
+  //TODO: Testar tudo
   int dia, mes, ano;
   int totalGuitarras=0;
   int totalClientesBanidos=0;

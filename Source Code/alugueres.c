@@ -149,6 +149,7 @@ void listarAlugueresDecorrer(ptrCliente listaClientes){
   while (listaClientes!=NULL) {
     ptrAluguer tmp=listaClientes->alugueres;
 
+    int count=0;
     if(listaClientes->nAlugueresAtual>0)
       printf("Cliente %s, NIF:%d\n\n",listaClientes->nome, listaClientes->nif);
 
@@ -158,10 +159,11 @@ void listarAlugueresDecorrer(ptrCliente listaClientes){
         printf("Data de inicio do aluguer: %d/%d/%d\n",tmp->diaInicio, tmp->mesInicio, tmp->anoInicio);
         limiteAluguer(tmp->diaInicio, tmp->mesInicio, tmp->anoInicio);
         puts("");
+        count++;
       }
       tmp=tmp->prox;
     }
-    printSeparador();
+    if(count) printSeparador();
     listaClientes=listaClientes->prox;
   }
 }
@@ -182,30 +184,6 @@ int devolveAlugueresDecorrer(ptrCliente listaClientes){
   }
   return count;
 }
-
-int calculaDiasAtraso(int diaInicio, int mesInicio, int anoInicio, int diaEntrega, int mesEntrega, int anoEntrega){
-  int diasAtrasados, totalDiasInicio, totalDiasEntrega;
-  //TODO:Banir cliente
-  if(anoInicio!=anoEntrega){
-    return 365;
-  }
-
-  //Reduzir tudo a dias
-  totalDiasInicio = diaInicio + MAXIMO_DIAS_MES * mesInicio;
-  totalDiasEntrega = diaEntrega + MAXIMO_DIAS_MES * mesEntrega;
-
-  diasAtrasados = totalDiasEntrega - totalDiasInicio;
-
-  diasAtrasados -= MAXIMO_DIAS_ALUGUER;
-
-  if (diasAtrasados<0){
-    return 0;
-  }else{
-    return diasAtrasados;
-  }
-}
-
-
 
 ptrCliente concluiAluguer(ptrCliente listaClientes,int *totalClientesBanidos, int diaAtual, int mesAtual, int anoAtual){
   //Verifica se há alugueres
@@ -266,7 +244,7 @@ ptrCliente concluiAluguer(ptrCliente listaClientes,int *totalClientesBanidos, in
   }
 
   //reduzir a dias
-  int diasAlugados = (diaEntrega + mesEntrega * MAXIMO_DIAS_MES) - (aluguerTmp->diaInicio + aluguerTmp->mesInicio * MAXIMO_DIAS_MES);
+  int diasAlugados = calculaDias(diaEntrega, mesEntrega, anoEntrega) - calculaDias(aluguerTmp->diaInicio, aluguerTmp->mesInicio, aluguerTmp->anoInicio);
   //Verificar se a data esta bem introduzida
   if(diasAlugados<0){
     printf("Erro! Verifique a data de entrega do aluguer!!\n");
@@ -274,10 +252,7 @@ ptrCliente concluiAluguer(ptrCliente listaClientes,int *totalClientesBanidos, in
   }
 
   int diasAtrasados=calculaDiasAtraso(aluguerTmp->diaInicio, aluguerTmp->mesInicio, aluguerTmp->anoInicio, diaEntrega, mesEntrega, anoEntrega);
-  if(diasAtrasados>MAXIMO_DIAS_ATRASO){
-    //Bane o cliente
-    return banirCliente(listaClientes, totalClientesBanidos, nifTmp, ATRASO);
-  }else if (diasAtrasados>0){
+  if (diasAtrasados>0){
     clienteAtual->nEntregasAtrasadas++;
   }
 
@@ -295,10 +270,6 @@ ptrCliente concluiAluguer(ptrCliente listaClientes,int *totalClientesBanidos, in
     //altera estado da guitarra para danificada
     aluguerTmp->guitarra->estado=DANIFICADA;
     clienteAtual->nEntregasDanificadas++;
-    //Bane o cliente
-    if(clienteAtual->nEntregasDanificadas>MAXIMO_GUITARRAS_DANIFICADAS){
-      return banirCliente(listaClientes, totalClientesBanidos, nifTmp, GUITARRAS_DANIFICADAS);
-    }
   }else{
     printf("Estado invalido!!\n\n");
   }
@@ -310,12 +281,45 @@ ptrCliente concluiAluguer(ptrCliente listaClientes,int *totalClientesBanidos, in
   aluguerTmp->mesEntrega=mesEntrega;
   aluguerTmp->anoEntrega=anoEntrega;
 
-  printf("Aluguer concluido em %d dias", diasAlugados+diasAtrasados);
+  printf("Aluguer concluido em %d dias", diasAlugados);
   diasAtrasados==0 ? printf(",sem atrasos!") : printf(",com %d dias de atraso!", diasAtrasados);
   //TODO: Acrescentar se foi danificada?
   int total = calculaValorAluguer(diasAlugados, diasAtrasados, aluguerTmp->guitarra->estado, aluguerTmp->guitarra->precoAluguerDia, aluguerTmp->guitarra->valor);
   printf("\nO valor total do aluguer é de %d$!\n", total);
+
+  //Verifica se o cliente tem de ser banido
+  if(diasAtrasados>MAXIMO_DIAS_ATRASO){
+    return banirCliente(listaClientes, totalClientesBanidos, nifTmp, ATRASO);
+  }else if(clienteAtual->nEntregasDanificadas>MAXIMO_GUITARRAS_DANIFICADAS){
+    return banirCliente(listaClientes, totalClientesBanidos, nifTmp, GUITARRAS_DANIFICADAS);
+  }
   return listaClientes;
+}
+
+int calculaDias(int dia, int mes, int ano){
+  int totalDias;
+  //Algoritmo que converte uma data do calendario Gregoriano para uma data em dias Julianos
+  totalDias=(1461 * (ano + 4800 + (mes - 14)/12))/4 +(367 * (mes - 2 - 12 * ((mes - 14)/12)))/12 - (3 * ((ano + 4900 + (mes - 14)/12)/100))/4 + dia - 32075;
+  return totalDias;
+}
+
+int calculaDiasAtraso(int diaInicio, int mesInicio, int anoInicio, int diaEntrega, int mesEntrega, int anoEntrega){
+  int diasAtrasados, totalDiasInicio, totalDiasEntrega;
+
+  //Reduzir tudo a dias
+  totalDiasInicio = calculaDias(diaInicio, mesInicio, anoInicio);
+  totalDiasEntrega = calculaDias(diaEntrega, mesEntrega, anoEntrega);
+
+  //Calcula a diferença de dias dos alugueres
+  diasAtrasados = totalDiasEntrega - totalDiasInicio;
+  //Subtrai o maximo de dias permitido
+  diasAtrasados -= MAXIMO_DIAS_ALUGUER;
+  //Se for inferior a 0 é porque não há dias de atraso
+  if (diasAtrasados<0){
+    return 0;
+  }else{
+    return diasAtrasados;
+  }
 }
 
 int calculaValorAluguer(int diasAlugados,int diasAtrasados,int estado, int precoAluguerDia, int valorGuitarra){
@@ -325,7 +329,7 @@ int calculaValorAluguer(int diasAlugados,int diasAtrasados,int estado, int preco
     total += valorGuitarra;
 
   if(diasAlugados>0){
-    //Casa nao haja dias atrasados o resultado não é influenciado por é somado 0
+    //Casa nao haja dias atrasados o resultado não é influenciado pois é somado 0
     total += diasAlugados*precoAluguerDia + diasAtrasados*MULTA;
   }else{
     //casos o dia de entrega seja igual ao dia de aluguer
