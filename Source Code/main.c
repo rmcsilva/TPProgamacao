@@ -11,19 +11,18 @@ int main(int argc, char const *argv[]) {
   //TODO: Testar tudo
   int dia, mes, ano;
   int totalGuitarras=0;
-  int totalClientesBanidos=0;
   ptrGuitarra listaGuitarras=NULL;
   ptrCliente listaClientes=NULL;
 
   printf("Introduza a data do progama!\n");
   alteraData(&dia,&mes,&ano);
-
+  //Importa estrutras dos ficherios de texto para memória
   listaGuitarras=importaGuitarras(listaGuitarras,&totalGuitarras);
   listaClientes=importaClientes(listaClientes,listaGuitarras, totalGuitarras);
-  importaTotalClientesBanidos(&totalClientesBanidos);
-  mainMenu(&listaClientes, &listaGuitarras, &totalGuitarras, &totalClientesBanidos, &dia, &mes, &ano);
+  mainMenu(&listaClientes, &listaGuitarras, &totalGuitarras, &dia, &mes, &ano);
+  //Exporta estrutras da memória para os ficherios de texto
   exportaDados(listaClientes, listaGuitarras, totalGuitarras);
-  //Elimina estruturas
+  //Elimina estruturas da memmória
   freeCliente(&listaClientes);
   free(listaGuitarras);
   return 0;

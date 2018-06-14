@@ -4,7 +4,7 @@
 #include "alugueres.h"
 typedef struct cliente cliente, *ptrCliente;
 
-//Contantes motivo para cliente banido
+//Contantes para o motivo do cliente banido
 #define ATRASO 0
 #define GUITARRAS_DANIFICADAS 1
 
@@ -28,15 +28,15 @@ typedef struct clienteBanido{
 //Métodos clientes
 ptrCliente adicionaCliente(ptrCliente listaClientes);
 ptrCliente removeCliente(ptrCliente listaClientes);
-ptrCliente banirCliente(ptrCliente listaClientes,int *totalClientesBanidos, int nif, int motivo);
+ptrCliente banirCliente(ptrCliente listaClientes, int nif, int motivo);
 void listarClientesAtivos(ptrCliente listaClientes);
 void listarClientesBanidos();
 int verificaCliente(ptrCliente listaClientes, int nif);
 void mostraCliente(ptrCliente listaClientes);
 void freeCliente(ptrCliente* listaClientes);
 //Métodos Alugueres
-ptrCliente criarAluguer(ptrCliente listaClientes, ptrGuitarra listaGuitarras, int totalGuitarras, int *totalClientesBanidos, int diaAtual, int mesAtual, int anoAtual);
-ptrCliente concluiAluguer(ptrCliente listaClientes, int *totalClientesBanidos, int diaAtual, int mesAtual, int anoAtual);
+ptrCliente criarAluguer(ptrCliente listaClientes, ptrGuitarra listaGuitarras, int totalGuitarras, int diaAtual, int mesAtual, int anoAtual);
+ptrCliente concluiAluguer(ptrCliente listaClientes, int diaAtual, int mesAtual, int anoAtual);
 void listarAlugueresDecorrer(ptrCliente listaClientes);
 int devolveAlugueresDecorrer(ptrCliente listaClientes);
 //Métodos Guitarras

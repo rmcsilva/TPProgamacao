@@ -11,11 +11,11 @@ typedef struct aluguer aluguer, *ptrAluguer;
 #define MAXIMO_DIAS_ALUGUER 7
 #define MULTA 10
 
-//Constantes banir
+//Constantes banir clientes
 #define MAXIMO_GUITARRAS_DANIFICADAS 3
 #define MAXIMO_DIAS_ATRASO 20
 
-//Constantes estado estrutura aluguer
+//Constantes para o estado da estrutura aluguer
 #define DECORRER 0
 #define ENTREGUE 1
 #define ENTREGA_DANIFICADA 2
@@ -23,15 +23,14 @@ typedef struct aluguer aluguer, *ptrAluguer;
 struct aluguer{
   ptrGuitarra guitarra;
   int estado;
-  //Data inicio
+  //Data do inicio do aluguer
   int diaInicio;
   int mesInicio;
   int anoInicio;
-  //Data entrega
+  //Data da entrega do aluguer
   int diaEntrega;
   int mesEntrega;
   int anoEntrega;
-  //TODO: dias de atraso
   ptrAluguer prox;
 };
 

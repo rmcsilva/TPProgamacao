@@ -4,12 +4,11 @@
 #include "clientes.h"
 #include "alugueres.h"
 
-void mainMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *totalGuitarras, int *totalClientesBanidos, int *diaAtual, int *mesAtual, int *anoAtual);
+void mainMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *totalGuitarras, int *diaAtual, int *mesAtual, int *anoAtual);
 void guitarrasMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *totalGuitarras, int diaAtual, int mesAtual, int anoAtual);
 void clientesMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *totalGuitarras, int diaAtual, int mesAtual, int anoAtual);
-void alugueresMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *totalGuitarras, int *totalClientesBanidos, int *diaAtual, int *mesAtual, int *anoAtual);
+void alugueresMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *totalGuitarras, int *diaAtual, int *mesAtual, int *anoAtual);
 void alteraData(int *dia, int *mes, int *ano);
 void printDataLogo(int dia, int mes, int ano);
 void printSeparador();
-void tecla();
 #endif

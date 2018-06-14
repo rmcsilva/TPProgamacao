@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-ptrCliente criarAluguer(ptrCliente listaClientes, ptrGuitarra listaGuitarras, int totalGuitarras, int *totalClientesBanidos, int diaAtual, int mesAtual, int anoAtual){
+ptrCliente criarAluguer(ptrCliente listaClientes, ptrGuitarra listaGuitarras, int totalGuitarras, int diaAtual, int mesAtual, int anoAtual){
   //TODO: Verificar banir!
   if(listaClientes==NULL){
     printf("Não existem clientes!\n\n");
@@ -47,7 +47,7 @@ ptrCliente criarAluguer(ptrCliente listaClientes, ptrGuitarra listaGuitarras, in
 
   //Verifica se o cliente ultrapassou o máximo guitarras danificadas
   if(clienteAtual->nEntregasDanificadas>MAXIMO_GUITARRAS_DANIFICADAS){
-    return banirCliente(listaClientes, totalClientesBanidos, clienteAtual->nif, GUITARRAS_DANIFICADAS);
+    return banirCliente(listaClientes, clienteAtual->nif, GUITARRAS_DANIFICADAS);
   }
 
   //Verifca se ao realizar o aluguer atual é ultrupassado o maximo de alugueresa a decorrer
@@ -62,7 +62,7 @@ ptrCliente criarAluguer(ptrCliente listaClientes, ptrGuitarra listaGuitarras, in
     if(listaAlugueres->estado>DECORRER){
       if(calculaDiasAtraso(listaAlugueres->diaInicio, listaAlugueres->mesInicio, listaAlugueres->anoInicio,
                            listaAlugueres->diaEntrega, listaAlugueres->mesEntrega, listaAlugueres->anoEntrega)>MAXIMO_DIAS_ATRASO){
-        return banirCliente(listaClientes, totalClientesBanidos, clienteAtual->nif, ATRASO);
+        return banirCliente(listaClientes, clienteAtual->nif, ATRASO);
       }
     }
     listaAlugueres=listaAlugueres->prox;
@@ -126,66 +126,8 @@ ptrCliente criarAluguer(ptrCliente listaClientes, ptrGuitarra listaGuitarras, in
   return listaClientes;
 }
 
-void limiteAluguer(int diaAtual, int mesAtual, int anoAtual){
-  diaAtual += MAXIMO_DIAS_ALUGUER;
-  if(diaAtual > MAXIMO_DIAS_MES){
-    diaAtual -= MAXIMO_DIAS_MES;
-    if(mesAtual > 12){
-      mesAtual=1;
-      anoAtual++;
-    }else{
-      mesAtual++;
-    }
-  }
-  printf("Data limite para entrega do aluguer: %d/%d/%d\n",diaAtual, mesAtual, anoAtual);
-}
 
-void listarAlugueresDecorrer(ptrCliente listaClientes){
-  if(listaClientes==NULL){
-    printf("Não existem clientes!\n\n");
-    return;
-  }
-  //Procura clientes todos
-  while (listaClientes!=NULL) {
-    ptrAluguer tmp=listaClientes->alugueres;
-
-    int count=0;
-    if(listaClientes->nAlugueresAtual>0)
-      printf("Cliente %s, NIF:%d\n\n",listaClientes->nome, listaClientes->nif);
-
-    while(tmp!=NULL){
-      if(tmp->estado==DECORRER){
-        printf("Guitarra %s, ID:%d\n",tmp->guitarra->nome, tmp->guitarra->id);
-        printf("Data de inicio do aluguer: %d/%d/%d\n",tmp->diaInicio, tmp->mesInicio, tmp->anoInicio);
-        limiteAluguer(tmp->diaInicio, tmp->mesInicio, tmp->anoInicio);
-        puts("");
-        count++;
-      }
-      tmp=tmp->prox;
-    }
-    if(count) printSeparador();
-    listaClientes=listaClientes->prox;
-  }
-}
-
-//devolve o numero de alugueres a decorrer
-int devolveAlugueresDecorrer(ptrCliente listaClientes){
-  int count=0;
-  while (listaClientes!=NULL) {
-    ptrAluguer tmp=listaClientes->alugueres;
-
-    while(tmp!=NULL){
-      if(tmp->estado==DECORRER){
-        count++;
-      }
-      tmp=tmp->prox;
-    }
-    listaClientes=listaClientes->prox;
-  }
-  return count;
-}
-
-ptrCliente concluiAluguer(ptrCliente listaClientes,int *totalClientesBanidos, int diaAtual, int mesAtual, int anoAtual){
+ptrCliente concluiAluguer(ptrCliente listaClientes, int diaAtual, int mesAtual, int anoAtual){
   //Verifica se há alugueres
   if(devolveAlugueresDecorrer(listaClientes)==0){
     printf("Não há alugueres a decorrer!\n\n");
@@ -289,19 +231,83 @@ ptrCliente concluiAluguer(ptrCliente listaClientes,int *totalClientesBanidos, in
 
   //Verifica se o cliente tem de ser banido
   if(diasAtrasados>MAXIMO_DIAS_ATRASO){
-    return banirCliente(listaClientes, totalClientesBanidos, nifTmp, ATRASO);
+    return banirCliente(listaClientes, nifTmp, ATRASO);
   }else if(clienteAtual->nEntregasDanificadas>MAXIMO_GUITARRAS_DANIFICADAS){
-    return banirCliente(listaClientes, totalClientesBanidos, nifTmp, GUITARRAS_DANIFICADAS);
+    return banirCliente(listaClientes, nifTmp, GUITARRAS_DANIFICADAS);
   }
   return listaClientes;
 }
 
+
+void listarAlugueresDecorrer(ptrCliente listaClientes){
+  if(listaClientes==NULL){
+    printf("Não existem clientes!\n\n");
+    return;
+  }
+  //Procura clientes todos
+  while (listaClientes!=NULL) {
+    ptrAluguer tmp=listaClientes->alugueres;
+
+    int count=0;
+    if(listaClientes->nAlugueresAtual>0)
+      printf("Cliente %s, NIF:%d\n\n",listaClientes->nome, listaClientes->nif);
+
+    while(tmp!=NULL){
+      if(tmp->estado==DECORRER){
+        printf("Guitarra %s, ID:%d\n",tmp->guitarra->nome, tmp->guitarra->id);
+        printf("Data de inicio do aluguer: %d/%d/%d\n",tmp->diaInicio, tmp->mesInicio, tmp->anoInicio);
+        limiteAluguer(tmp->diaInicio, tmp->mesInicio, tmp->anoInicio);
+        puts("");
+        count++;
+      }
+      tmp=tmp->prox;
+    }
+    if(count) printSeparador();
+    listaClientes=listaClientes->prox;
+  }
+}
+
+
+void limiteAluguer(int diaAtual, int mesAtual, int anoAtual){
+  diaAtual += MAXIMO_DIAS_ALUGUER;
+  if(diaAtual > MAXIMO_DIAS_MES){
+    diaAtual -= MAXIMO_DIAS_MES;
+    if(mesAtual > 12){
+      mesAtual=1;
+      anoAtual++;
+    }else{
+      mesAtual++;
+    }
+  }
+  printf("Data limite para entrega do aluguer: %d/%d/%d\n",diaAtual, mesAtual, anoAtual);
+}
+
+
+//devolve o numero de alugueres a decorrer
+int devolveAlugueresDecorrer(ptrCliente listaClientes){
+  int count=0;
+  while (listaClientes!=NULL) {
+    ptrAluguer tmp=listaClientes->alugueres;
+
+    while(tmp!=NULL){
+      if(tmp->estado==DECORRER){
+        count++;
+      }
+      tmp=tmp->prox;
+    }
+    listaClientes=listaClientes->prox;
+  }
+  return count;
+}
+
+
+//Algoritmo que converte uma data do calendario Gregoriano para uma data em dias Julianos
 int calculaDias(int dia, int mes, int ano){
   int totalDias;
-  //Algoritmo que converte uma data do calendario Gregoriano para uma data em dias Julianos
   totalDias=(1461 * (ano + 4800 + (mes - 14)/12))/4 +(367 * (mes - 2 - 12 * ((mes - 14)/12)))/12 - (3 * ((ano + 4900 + (mes - 14)/12)/100))/4 + dia - 32075;
   return totalDias;
 }
+
 
 int calculaDiasAtraso(int diaInicio, int mesInicio, int anoInicio, int diaEntrega, int mesEntrega, int anoEntrega){
   int diasAtrasados, totalDiasInicio, totalDiasEntrega;
@@ -321,6 +327,7 @@ int calculaDiasAtraso(int diaInicio, int mesInicio, int anoInicio, int diaEntreg
     return diasAtrasados;
   }
 }
+
 
 int calculaValorAluguer(int diasAlugados,int diasAtrasados,int estado, int precoAluguerDia, int valorGuitarra){
   int total=0;

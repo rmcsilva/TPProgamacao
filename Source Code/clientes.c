@@ -51,6 +51,7 @@ ptrCliente adicionaCliente(ptrCliente listaClientes){
   return listaClientes;
 }
 
+
 ptrCliente removeCliente(ptrCliente listaClientes){
   //TODO:REVER
   if(listaClientes==NULL){
@@ -107,7 +108,8 @@ ptrCliente removeCliente(ptrCliente listaClientes){
   return listaClientes;
 }
 
-ptrCliente banirCliente(ptrCliente listaClientes,int *totalClientesBanidos, int nif, int motivo){
+
+ptrCliente banirCliente(ptrCliente listaClientes, int nif, int motivo){
   //TODO: Atualizar o ficheiro binários
   ptrCliente clienteAtual,clienteAnterior=NULL;
   clienteAtual = listaClientes;
@@ -130,7 +132,7 @@ ptrCliente banirCliente(ptrCliente listaClientes,int *totalClientesBanidos, int 
     }
   }
 
-  adicionaClienteBanido(totalClientesBanidos, clienteAtual->nome, clienteAtual->nif, motivo);
+  adicionaClienteBanido(clienteAtual->nome, clienteAtual->nif, motivo);
   //Se a lista só tive um nó então o anterior está a null
   if(clienteAnterior==NULL)
     listaClientes=clienteAtual->prox;
@@ -143,61 +145,6 @@ ptrCliente banirCliente(ptrCliente listaClientes,int *totalClientesBanidos, int 
   return listaClientes;
 }
 
-//devolve um se o cliente já existir, devolve 0 caso contrário
-int verificaCliente(ptrCliente listaClientes, int nif){
-  //TODO: Falta verificar nos clientes banidos
-  while (listaClientes!=NULL) {
-    if(listaClientes->nif==nif) return 1;
-    listaClientes=listaClientes->prox;
-  }
-
-  FILE *f;
-  f=fopen(NOME_FICHEIRO_CLIENTES_BANIDOS, "rb");
-  //Como não há clientes banidos devolve 0
-  if(f==NULL) return 0;
-
-  clienteBanido clienteBanido;
-  while (fread(&clienteBanido, sizeof(clienteBanido), 1, f)==1)
-    if (clienteBanido.nif==nif) return 1;
-
-  fclose(f);
-
-  return 0;
-}
-
-
-//BASE MAIS QUE COMPLETA ADPTAR GERAL
-void mostraTudoETodos(ptrCliente listaClientes){
-  ptrAluguer tmp;
-
-  while(listaClientes != NULL){
-    printf("Nome do cliente: %s\n", listaClientes->nome);
-    printf("Nif do cliente: %d\n", listaClientes->nif);
-    printf("Número de alugueres total do cliente: %d\n", listaClientes->nAlugueresTotal);
-    printf("Número de alugueres atual do cliente: %d\n", listaClientes->nAlugueresAtual);
-    printf("Número de entregas atrasadas: %d\n", listaClientes->nEntregasAtrasadas);
-    printf("Número de entregas danificadas: %d\n", listaClientes->nEntregasDanificadas);
-    tmp=listaClientes->alugueres;
-    while (tmp != NULL) {
-      printf("Data de inicio: %d\\%d\\%d\n",
-            tmp->diaInicio, tmp->mesInicio, tmp->anoInicio);
-
-      //Verifica se já foi entregue
-      printf("Estado do aluguer: ");
-      if(tmp->estado){
-        tmp->estado==ENTREGUE ? printf("Entregue\n") : printf("Entregue danificado\n");
-        printf("Data da entrega: %d\\%d\\%d\n"
-            ,tmp->diaEntrega, tmp->mesEntrega, tmp->anoEntrega);
-      }else{
-        printf("A decorrer\n");
-        //TODO: data prevista de entrega
-      }
-      tmp = tmp->prox;
-    }
-    puts("");
-    listaClientes = listaClientes->prox;
-  }
-}
 
 void mostraCliente(ptrCliente listaClientes){
   if(listaClientes==NULL){
@@ -228,6 +175,7 @@ void mostraCliente(ptrCliente listaClientes){
 
 }
 
+
 void listarClientesAtivos(ptrCliente listaClientes){
   if(listaClientes==NULL){
     printf("Não existem clientes!\n\n");
@@ -241,6 +189,7 @@ void listarClientesAtivos(ptrCliente listaClientes){
     listaClientes = listaClientes->prox;
   }
 }
+
 
 void listarClientesBanidos(){
   FILE *f;
@@ -263,62 +212,40 @@ void listarClientesBanidos(){
   return;
 }
 
-void listarHistoricoAluguerGuitarra(ptrCliente listaClientes, ptrGuitarra listaGuitarras, int total){
-  int idTmp, count=0;
 
-  if(listaGuitarras==NULL){
-    printf("Não existem guitarras!!\n\n");
-    printSeparador();
-    return;
-  }
-
-  if(listaClientes==NULL){
-    printf("Não existem clientes!\n\n");
-    printSeparador();
-    return;
-  }
-
-  printf("Introduza o id da guitarra que deseja procurar o historico:\n");
-  scanf(" %d", &idTmp);
-  if(devolveIndexGuitarra(listaGuitarras, total, idTmp) == -1){
-    printf("A guitarra não existe!!\n");
-    printSeparador();
-    return;
-  }
+//devolve um se o cliente já existir, devolve 0 caso contrário
+int verificaCliente(ptrCliente listaClientes, int nif){
+  //TODO: Falta verificar nos clientes banidos
   while (listaClientes!=NULL) {
-    ptrAluguer tmpAluguer=listaClientes->alugueres;
-    while (tmpAluguer!=NULL) {
-      if(tmpAluguer->guitarra->id==idTmp && tmpAluguer->estado>0){
-        //Para verificar se a guitarra tem historico
-        count++;
-        printf("Cliente %s, nif:%d \n",listaClientes->nome, listaClientes->nif);
-        printf("Data de inicio do emprestimo: %d/%d/%d\n", tmpAluguer->diaInicio, tmpAluguer->mesInicio, tmpAluguer->anoInicio);
-        printf("Data final do emprestimo: %d/%d/%d\n", tmpAluguer->diaEntrega, tmpAluguer->mesEntrega, tmpAluguer->anoEntrega);
-        int diasAtraso=calculaDiasAtraso(tmpAluguer->diaInicio, tmpAluguer->mesInicio, tmpAluguer->anoInicio, tmpAluguer->diaEntrega, tmpAluguer->mesEntrega, tmpAluguer->anoEntrega);
-        //TODO: Banir cliente se dias de atraso exceder a 20?
-        diasAtraso==0 ? printf("Emprestimo concluido sem dias de atraso!\n\n") : printf("Emprestimo concluido com %d dias de atraso!!\n\n", diasAtraso);
-        printSeparador();
-      }
-      tmpAluguer=tmpAluguer->prox;
-    }
+    if(listaClientes->nif==nif) return 1;
     listaClientes=listaClientes->prox;
   }
 
-  if(count==0){
-    printf("A guitarra com o id %d, ainda não tem historico!\n\n", idTmp);
-    printSeparador();
-  }
+  FILE *f;
+  f=fopen(NOME_FICHEIRO_CLIENTES_BANIDOS, "rb");
+  //Como não há clientes banidos devolve 0
+  if(f==NULL) return 0;
 
-  return;
+  clienteBanido clienteBanido;
+  while (fread(&clienteBanido, sizeof(clienteBanido), 1, f)==1)
+    if (clienteBanido.nif==nif) return 1;
+
+  fclose(f);
+
+  return 0;
 }
 
+
+//Apaga todos os clientes e os seus alugueres
 void freeCliente(ptrCliente* listaClientes){
   if(listaClientes==NULL)
     return;
 
   ptrCliente tmpClienteAtual = *listaClientes;
+  //Ponteiro para cliente auxiliar que vai ser apagado quando se percorre a lista de clientes
   ptrCliente tmpClienteAnt;
   ptrAluguer tmpAluguerAtual= (*listaClientes)->alugueres;
+  //Mesma lógica para os alugueres
   ptrAluguer tmpAluguerAnt;
 
   while (tmpClienteAtual!=NULL) {

@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void mainMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *totalGuitarras, int *totalClientesBanidos, int *diaAtual, int *mesAtual, int *anoAtual){
+void mainMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *totalGuitarras, int *diaAtual, int *mesAtual, int *anoAtual){
   int option=0;
 
   do {
@@ -17,7 +17,7 @@ void mainMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *total
         clientesMenu(listaClientes, listaGuitarras, totalGuitarras, *diaAtual, *mesAtual, *anoAtual);
         break;
       case 3:
-        alugueresMenu(listaClientes, listaGuitarras, totalGuitarras, totalClientesBanidos,diaAtual, mesAtual, anoAtual);
+        alugueresMenu(listaClientes, listaGuitarras, totalGuitarras,diaAtual, mesAtual, anoAtual);
         break;
 
       case 4:
@@ -34,6 +34,7 @@ void mainMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *total
   } while(option!=5);
 
 }
+
 
 void guitarrasMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *totalGuitarras, int diaAtual, int mesAtual, int anoAtual){
   int option=0;
@@ -67,6 +68,7 @@ void guitarrasMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *
     }
   } while(option!=5);
 }
+
 
 void clientesMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *totalGuitarras, int diaAtual, int mesAtual, int anoAtual){
   int option=0;
@@ -104,7 +106,8 @@ void clientesMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *t
   } while(option!=6);
 }
 
-void alugueresMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *totalGuitarras, int *totalClientesBanidos, int *diaAtual, int *mesAtual, int *anoAtual){
+
+void alugueresMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *totalGuitarras, int *diaAtual, int *mesAtual, int *anoAtual){
   int option=0;
   do {
     printDataLogo(*diaAtual, *mesAtual, *anoAtual);
@@ -116,10 +119,10 @@ void alugueresMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *
     scanf("%d",&option);
     switch (option) {
       case 1:
-        *listaClientes=criarAluguer(*listaClientes, *listaGuitarras, *totalGuitarras, totalClientesBanidos, *diaAtual, *mesAtual, *anoAtual);
+        *listaClientes=criarAluguer(*listaClientes, *listaGuitarras, *totalGuitarras, *diaAtual, *mesAtual, *anoAtual);
         break;
       case 2:
-        *listaClientes=concluiAluguer(*listaClientes, totalClientesBanidos, *diaAtual, *mesAtual, *anoAtual);
+        *listaClientes=concluiAluguer(*listaClientes, *diaAtual, *mesAtual, *anoAtual);
         break;
       case 3:
         listarAlugueresDecorrer(*listaClientes);
@@ -132,6 +135,7 @@ void alugueresMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *
     }
   } while(option!=4);
 }
+
 
 void alteraData(int *dia, int *mes, int *ano){
   do{
@@ -164,11 +168,7 @@ void printDataLogo(int dia, int mes, int ano){
 "                        ``-....-''  ``-..-''\n",dia,mes,ano);
 }
 
+
 void printSeparador(){
   printf("-----------------------------------------------------\n\n");
-}
-
-void tecla(){
-  char ch;
-  scanf(" %[^\n]c", &ch);
 }

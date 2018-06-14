@@ -1,8 +1,8 @@
 #include "ficheiros.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 ptrGuitarra importaGuitarras(ptrGuitarra listaGuitarras, int *total){
   FILE *f;
   f=fopen(NOME_FICHEIRO_GUITARRAS, "r");
@@ -37,6 +37,7 @@ ptrGuitarra importaGuitarras(ptrGuitarra listaGuitarras, int *total){
   printf("Guitarras importadas com sucesso!\n");
   return listaGuitarras;
 }
+
 
 ptrCliente importaClientes(ptrCliente listaClientes,ptrGuitarra listaGuitarras, int total){
   FILE *f;
@@ -151,9 +152,10 @@ ptrCliente importaClientes(ptrCliente listaClientes,ptrGuitarra listaGuitarras, 
     }
   }
   fclose(f);
-  printf("Clientes importados com sucesso\n");
+  printf("Clientes importados com sucesso!\n");
   return listaClientes;
 }
+
 
 void exportaDados(ptrCliente listaClientes,ptrGuitarra listaGuitarras, int total){
   FILE *f;
@@ -185,24 +187,8 @@ void exportaDados(ptrCliente listaClientes,ptrGuitarra listaGuitarras, int total
   fclose(f);
 }
 
-void importaTotalClientesBanidos(int *totalClientesBanidos){
-  FILE *f;
-  f=fopen(NOME_FICHEIRO_CLIENTES_BANIDOS, "rb");
-  if(f==NULL){
-    printf("Erro ao abrir o ficheiro %s!\n",NOME_FICHEIRO_CLIENTES_BANIDOS);
-    return;
-  }
-  clienteBanido clienteBanido;
-  //Fazer desta forma pois ao guardar o inteiro é facilmente alterável
-  while(fread(&clienteBanido, sizeof(clienteBanido), 1, f)==1)
-    (*totalClientesBanidos)++;
-  //Devolve número total de clientes banidos
-  printf("Clientes banidos importados com sucesso\n");
-  fclose(f);
-  return;
-}
 
-void adicionaClienteBanido(int *totalClientesBanidos, char nome[100], int nif, int motivo){
+void adicionaClienteBanido(char nome[100], int nif, int motivo){
   FILE *f;
   f=fopen(NOME_FICHEIRO_CLIENTES_BANIDOS, "ab");
   if(f==NULL){
@@ -214,11 +200,8 @@ void adicionaClienteBanido(int *totalClientesBanidos, char nome[100], int nif, i
   clienteBanido.nif=nif;
   clienteBanido.motivo=motivo;
   //Append abre o ficheiro no final,logo é só adicionar
-  if(fwrite(&clienteBanido, sizeof(clienteBanido), 1, f)==1){
-    (*totalClientesBanidos)++;
-  }else{
-    printf("Erro ao adiconar cliente banido no ficheiro %s!\n",NOME_FICHEIRO_CLIENTES_BANIDOS);
-  }
+  if(fwrite(&clienteBanido, sizeof(clienteBanido), 1, f)==1){}
+  else{printf("Erro ao adiconar cliente banido no ficheiro %s!\n",NOME_FICHEIRO_CLIENTES_BANIDOS);}
   fclose(f);
   return;
 }

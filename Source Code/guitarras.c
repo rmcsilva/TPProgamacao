@@ -1,22 +1,7 @@
-#include "alugueres.h"
-#include "guitarras.h"
+#include "clientes.h"
 #include "ui.h"
 #include <stdio.h>
 #include <stdlib.h>
-
-
-void preencheGuitarra(ptrGuitarra guitarra, int id){
-  guitarra->id=id;
-  guitarra->estado = DISPONIVEL;
-  printf("Introduza o nome da guitarra\n");
-  scanf(" %[^\n]s", guitarra->nome);
-
-  printf("Introduza o preco do aluguer por dia\n");
-  scanf(" %d", &guitarra->precoAluguerDia);
-
-  printf("Introduza o valor da guitarra\n");
-  scanf(" %d", &guitarra->valor);
-}
 
 ptrGuitarra adicionaGuitarra(ptrGuitarra guitarras, int *total){
   ptrGuitarra tmp;
@@ -32,6 +17,57 @@ ptrGuitarra adicionaGuitarra(ptrGuitarra guitarras, int *total){
   (*total)++;
   return guitarras;
 }
+
+
+void listarHistoricoAluguerGuitarra(ptrCliente listaClientes, ptrGuitarra listaGuitarras, int total){
+  int idTmp, count=0;
+
+  if(listaGuitarras==NULL){
+    printf("Não existem guitarras!!\n\n");
+    printSeparador();
+    return;
+  }
+
+  if(listaClientes==NULL){
+    printf("Não existem clientes!\n\n");
+    printSeparador();
+    return;
+  }
+
+  printf("Introduza o id da guitarra que deseja procurar o historico:\n");
+  scanf(" %d", &idTmp);
+  if(devolveIndexGuitarra(listaGuitarras, total, idTmp) == -1){
+    printf("A guitarra não existe!!\n");
+    printSeparador();
+    return;
+  }
+  while (listaClientes!=NULL) {
+    ptrAluguer tmpAluguer=listaClientes->alugueres;
+    while (tmpAluguer!=NULL) {
+      if(tmpAluguer->guitarra->id==idTmp && tmpAluguer->estado>0){
+        //Para verificar se a guitarra tem historico
+        count++;
+        printf("Cliente %s, nif:%d \n",listaClientes->nome, listaClientes->nif);
+        printf("Data de inicio do emprestimo: %d/%d/%d\n", tmpAluguer->diaInicio, tmpAluguer->mesInicio, tmpAluguer->anoInicio);
+        printf("Data final do emprestimo: %d/%d/%d\n", tmpAluguer->diaEntrega, tmpAluguer->mesEntrega, tmpAluguer->anoEntrega);
+        int diasAtraso=calculaDiasAtraso(tmpAluguer->diaInicio, tmpAluguer->mesInicio, tmpAluguer->anoInicio, tmpAluguer->diaEntrega, tmpAluguer->mesEntrega, tmpAluguer->anoEntrega);
+        //TODO: Banir cliente se dias de atraso exceder a 20?
+        diasAtraso==0 ? printf("Emprestimo concluido sem dias de atraso!\n\n") : printf("Emprestimo concluido com %d dias de atraso!!\n\n", diasAtraso);
+        printSeparador();
+      }
+      tmpAluguer=tmpAluguer->prox;
+    }
+    listaClientes=listaClientes->prox;
+  }
+
+  if(count==0){
+    printf("A guitarra com o id %d, ainda não tem historico!\n\n", idTmp);
+    printSeparador();
+  }
+
+  return;
+}
+
 
 void listarGuitarras(ptrGuitarra guitarras, int total){
   for(int i=0; i<total; i++){
@@ -50,23 +86,6 @@ void listarGuitarras(ptrGuitarra guitarras, int total){
   }
 }
 
-void listarGuitarrasDisponiveis(ptrGuitarra guitarras, int total){
-  if(guitarras==NULL){
-    printf("Não existem guitarras!!\n\n");
-    printSeparador();
-    return;
-  }
-  printf("Guitarras disponiveis:\n");
-  for(int i=0; i<total; i++){
-    if(guitarras[i].estado==DISPONIVEL){
-      printf("Nome da guitarra: %s\n", guitarras[i].nome);
-      printf("ID da guitarra: %d\n", guitarras[i].id);
-      printf("Preco do aluguer da guitarra por dia: %d\n", guitarras[i].precoAluguerDia);
-      printf("Valor da Guitarra: %d\n\n", guitarras[i].valor);
-      printSeparador();
-    }
-  }
-}
 
 void listarGuitarrasAlugadas(ptrGuitarra guitarras, int total){
   if(guitarras==NULL){
@@ -86,6 +105,40 @@ void listarGuitarrasAlugadas(ptrGuitarra guitarras, int total){
   }
 }
 
+
+void listarGuitarrasDisponiveis(ptrGuitarra guitarras, int total){
+  if(guitarras==NULL){
+    printf("Não existem guitarras!!\n\n");
+    printSeparador();
+    return;
+  }
+  printf("Guitarras disponiveis:\n");
+  for(int i=0; i<total; i++){
+    if(guitarras[i].estado==DISPONIVEL){
+      printf("Nome da guitarra: %s\n", guitarras[i].nome);
+      printf("ID da guitarra: %d\n", guitarras[i].id);
+      printf("Preco do aluguer da guitarra por dia: %d\n", guitarras[i].precoAluguerDia);
+      printf("Valor da Guitarra: %d\n\n", guitarras[i].valor);
+      printSeparador();
+    }
+  }
+}
+
+
+void preencheGuitarra(ptrGuitarra guitarra, int id){
+  guitarra->id=id;
+  guitarra->estado = DISPONIVEL;
+  printf("Introduza o nome da guitarra\n");
+  scanf(" %[^\n]s", guitarra->nome);
+
+  printf("Introduza o preco do aluguer por dia\n");
+  scanf(" %d", &guitarra->precoAluguerDia);
+
+  printf("Introduza o valor da guitarra\n");
+  scanf(" %d", &guitarra->valor);
+}
+
+
 //Devolve um ID unico para as guitarras
 int devolveID(ptrGuitarra listaGuitarras, int total){
   int id;
@@ -103,6 +156,7 @@ int devolveID(ptrGuitarra listaGuitarras, int total){
   } while(1);
 }
 
+
 //devolve -1 se não existir
 int devolveIndexGuitarra(ptrGuitarra listaGuitarras, int total, int id){
   for(int i=0; i<total; i++){
@@ -112,6 +166,8 @@ int devolveIndexGuitarra(ptrGuitarra listaGuitarras, int total, int id){
   return -1;
 }
 
+
+//Devolve o número de guitarras disponiveis
 int verificaGuitarrasDisponiveis(ptrGuitarra listaGuitarras, int total){
   int count=0;
   for(int i=0; i<total; i++){
