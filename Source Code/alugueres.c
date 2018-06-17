@@ -4,7 +4,6 @@
 #include <stdlib.h>
 
 ptrCliente criarAluguer(ptrCliente listaClientes, ptrGuitarra listaGuitarras, int totalGuitarras, int diaAtual, int mesAtual, int anoAtual){
-  //TODO: Verificar banir!
   if(listaClientes==NULL){
     printf("Não existem clientes!\n\n");
     return listaClientes;
@@ -21,7 +20,7 @@ ptrCliente criarAluguer(ptrCliente listaClientes, ptrGuitarra listaGuitarras, in
 
   int opcao;
   printf("Escolha a opção desejada para concluir o aluguer:\n1-Usar a data atual\n2-Indicar outra data\n>");
-  scanf(" %d", &opcao);
+  opcao = scanfInteiro();
   if(opcao==1){
   }else if(opcao==2){
     printf("Introduza a data de conclusao do aluguer!\n");
@@ -35,7 +34,7 @@ ptrCliente criarAluguer(ptrCliente listaClientes, ptrGuitarra listaGuitarras, in
   ptrCliente clienteAtual=listaClientes;
   listarClientesAtivos(listaClientes);
   printf("Introduza o nif do cliente que deseja criar o aluguer: \n");
-  scanf(" %d",&nifTmp);
+  nifTmp = scanfInteiro();
   //Encontra o cliente com o nif indicado
   while (clienteAtual!=NULL && clienteAtual->nif!=nifTmp) {
     clienteAtual=clienteAtual->prox;
@@ -71,7 +70,7 @@ ptrCliente criarAluguer(ptrCliente listaClientes, ptrGuitarra listaGuitarras, in
   listarGuitarrasDisponiveis(listaGuitarras, totalGuitarras);
   int idTmp;
   printf("Introduza o ID da lista de guitarras a alugar:\n");
-  scanf(" %d", &idTmp);
+  idTmp = scanfInteiro();
   int index=-1;
   //Procura o indice da guitarra no vetor
   for(int i=0; i<totalGuitarras; i++){
@@ -137,7 +136,7 @@ ptrCliente concluiAluguer(ptrCliente listaClientes, int diaAtual, int mesAtual, 
   listarAlugueresDecorrer(listaClientes);
   int nifTmp;
   printf("Introduza o NIF do cliente que deseja concluir o aluguer: \n");
-  scanf(" %d",&nifTmp);
+  nifTmp = scanfInteiro();
   ptrCliente clienteAtual=listaClientes;
   //Encontra o cliente com o nif indicado
   while (clienteAtual!=NULL && clienteAtual->nif!=nifTmp) {
@@ -154,7 +153,7 @@ ptrCliente concluiAluguer(ptrCliente listaClientes, int diaAtual, int mesAtual, 
 
   int idTmp;
   printf("Introduza o ID da lista de guitarras alugadas ao cliente:\n");
-  scanf(" %d", &idTmp);
+  idTmp = scanfInteiro();
 
   ptrAluguer aluguerTmp = clienteAtual->alugueres;
   while (aluguerTmp!=NULL) {
@@ -172,7 +171,7 @@ ptrCliente concluiAluguer(ptrCliente listaClientes, int diaAtual, int mesAtual, 
   //Opçao de mudar a data
   int opcao, diaEntrega, mesEntrega, anoEntrega;
   printf("Escolha a opção desejada para concluir o aluguer:\n1-Usar a data atual\n2-Indicar outra data\n>");
-  scanf(" %d", &opcao);
+  opcao = scanfInteiro();
   if(opcao==1){
     diaEntrega=diaAtual;
     mesEntrega=mesAtual;
@@ -200,7 +199,7 @@ ptrCliente concluiAluguer(ptrCliente listaClientes, int diaAtual, int mesAtual, 
 
   int estado;
   printf("Verifique o estado da guitarra:\n1-Perfeitas Condicoes\n2-Danificada\n>");
-  scanf(" %d",&estado);
+  estado = scanfInteiro();
   if (estado==1) {
     //Atualizar o estado do aluguer
     aluguerTmp->estado=ENTREGUE;
@@ -225,7 +224,6 @@ ptrCliente concluiAluguer(ptrCliente listaClientes, int diaAtual, int mesAtual, 
 
   printf("Aluguer concluido em %d dias", diasAlugados);
   diasAtrasados==0 ? printf(",sem atrasos!") : printf(",com %d dias de atraso!", diasAtrasados);
-  //TODO: Acrescentar se foi danificada?
   int total = calculaValorAluguer(diasAlugados, diasAtrasados, aluguerTmp->guitarra->estado, aluguerTmp->guitarra->precoAluguerDia, aluguerTmp->guitarra->valor);
   printf("\nO valor total do aluguer é de %d$!\n", total);
 

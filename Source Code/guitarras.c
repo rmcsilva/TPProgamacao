@@ -35,7 +35,7 @@ void listarHistoricoAluguerGuitarra(ptrCliente listaClientes, ptrGuitarra listaG
   }
 
   printf("Introduza o id da guitarra que deseja procurar o historico:\n");
-  scanf(" %d", &idTmp);
+  idTmp = scanfInteiro();
   if(devolveIndexGuitarra(listaGuitarras, total, idTmp) == -1){
     printf("A guitarra não existe!!\n");
     printSeparador();
@@ -51,7 +51,6 @@ void listarHistoricoAluguerGuitarra(ptrCliente listaClientes, ptrGuitarra listaG
         printf("Data de inicio do emprestimo: %d/%d/%d\n", tmpAluguer->diaInicio, tmpAluguer->mesInicio, tmpAluguer->anoInicio);
         printf("Data final do emprestimo: %d/%d/%d\n", tmpAluguer->diaEntrega, tmpAluguer->mesEntrega, tmpAluguer->anoEntrega);
         int diasAtraso=calculaDiasAtraso(tmpAluguer->diaInicio, tmpAluguer->mesInicio, tmpAluguer->anoInicio, tmpAluguer->diaEntrega, tmpAluguer->mesEntrega, tmpAluguer->anoEntrega);
-        //TODO: Banir cliente se dias de atraso exceder a 20?
         diasAtraso==0 ? printf("Emprestimo concluido sem dias de atraso!\n\n") : printf("Emprestimo concluido com %d dias de atraso!!\n\n", diasAtraso);
         printSeparador();
       }
@@ -70,6 +69,12 @@ void listarHistoricoAluguerGuitarra(ptrCliente listaClientes, ptrGuitarra listaG
 
 
 void listarGuitarras(ptrGuitarra guitarras, int total){
+  if(total==0){
+    printf("Não existem guitarras!!\n\n");
+    printSeparador();
+    return;
+  }
+
   for(int i=0; i<total; i++){
     printf("Nome da guitarra: %s\n", guitarras[i].nome);
     printf("Estado: ");
@@ -132,10 +137,10 @@ void preencheGuitarra(ptrGuitarra guitarra, int id){
   scanf(" %[^\n]s", guitarra->nome);
 
   printf("Introduza o preco do aluguer por dia\n");
-  scanf(" %d", &guitarra->precoAluguerDia);
+  guitarra->precoAluguerDia = scanfInteiro();
 
   printf("Introduza o valor da guitarra\n");
-  scanf(" %d", &guitarra->valor);
+  guitarra->valor = scanfInteiro();
 }
 
 
@@ -144,7 +149,7 @@ int devolveID(ptrGuitarra listaGuitarras, int total){
   int id;
   do {
     printf("Introduza o ID da nova guitarra:\n");
-    scanf(" %d", &id);
+    id = scanfInteiro();
     //Se a lita das guitarras estiver vazia não é preciso verificar
     if (listaGuitarras==NULL) {
       return id;

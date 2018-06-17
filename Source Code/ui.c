@@ -8,7 +8,7 @@ void mainMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *total
   do {
     printDataLogo(*diaAtual, *mesAtual, *anoAtual);
     printf("Gerir:\n1-Guitarras\n2-Clientes\n3-Alugueres\n4-Alterar data\n5-Sair\n>");
-    scanf("%d",&option);
+    option = scanfInteiro();
     switch (option) {
       case 1:
         guitarrasMenu(listaClientes, listaGuitarras, totalGuitarras, *diaAtual, *mesAtual, *anoAtual);
@@ -46,7 +46,7 @@ void guitarrasMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *
       "3-Listar todas as guitarras\n"
       "4-Listar guitarras alugadas\n"
       "5-Voltar ao menu anterior\n>");
-    scanf("%d",&option);
+    option = scanfInteiro();
     switch (option) {
       case 1:
         *listaGuitarras=adicionaGuitarra(*listaGuitarras, totalGuitarras);
@@ -81,7 +81,7 @@ void clientesMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *t
       "4-Listar clientes ativos\n"
       "5-Listar clientes banidos\n"
       "6-Voltar ao menu anterior\n>");
-    scanf("%d",&option);
+    option = scanfInteiro();
     switch (option) {
       case 1:
         *listaClientes=adicionaCliente(*listaClientes);
@@ -116,7 +116,7 @@ void alugueresMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *
       "2-Concluir um aluguer\n"
       "3-Lista de alugueres a decorrer\n"
       "4-Voltar ao menu anterior\n>");
-    scanf("%d",&option);
+    option = scanfInteiro();
     switch (option) {
       case 1:
         *listaClientes=criarAluguer(*listaClientes, *listaGuitarras, *totalGuitarras, *diaAtual, *mesAtual, *anoAtual);
@@ -140,17 +140,17 @@ void alugueresMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *
 void alteraData(int *dia, int *mes, int *ano){
   do{
     printf("Dia: ");
-    scanf(" %d", dia);
+    *dia = scanfInteiro();
   }while (*dia<1 || *dia>31);
 
   do{
     printf("Mes: ");
-    scanf(" %d", mes);
+    *mes = scanfInteiro();
   }while (*mes<1 || *mes>12);
 
   do{
     printf("Ano: ");
-    scanf(" %d", ano);
+    *ano = scanfInteiro();
   }while (*ano<1900);
 }
 
@@ -171,4 +171,14 @@ void printDataLogo(int dia, int mes, int ano){
 
 void printSeparador(){
   printf("-----------------------------------------------------\n\n");
+}
+
+int scanfInteiro(){
+  int inteiro, fim=0;
+  char tmp;
+  while (fim < 1) {
+     scanf(" %d", &inteiro) == 1 ? fim++ : 0;
+     scanf("%c", &tmp);
+  }
+  return inteiro;
 }

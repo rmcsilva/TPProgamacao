@@ -11,4 +11,5 @@ void alugueresMenu(ptrCliente* listaClientes, ptrGuitarra* listaGuitarras, int *
 void alteraData(int *dia, int *mes, int *ano);
 void printDataLogo(int dia, int mes, int ano);
 void printSeparador();
+int scanfInteiro();
 #endif

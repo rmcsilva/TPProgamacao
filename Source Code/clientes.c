@@ -7,10 +7,9 @@
 ptrCliente adicionaCliente(ptrCliente listaClientes){
   int nifTmp;
   //Verifica se o cliente já existe
-  //TODO: Verificar nos clientes banidos!!
   do{
     printf("Introduza o NIF do novo cliente\n");
-    scanf(" %d", &nifTmp);
+    nifTmp = scanfInteiro();
     //Se listaClientes tiver vazio não é necessario verificar
     if(listaClientes==NULL) break;
     //Verifica se o cliente já existe
@@ -53,14 +52,13 @@ ptrCliente adicionaCliente(ptrCliente listaClientes){
 
 
 ptrCliente removeCliente(ptrCliente listaClientes){
-  //TODO:REVER
   if(listaClientes==NULL){
     printf("Não existem clientes!\n\n");
     return listaClientes;
   }
   int nifTmp;
   printf("Introduza o nif do cliente a remover:\n");
-  scanf(" %d", &nifTmp);
+  nifTmp = scanfInteiro();
 
   ptrCliente clienteAtual,clienteAnterior=NULL;
   clienteAtual = listaClientes;
@@ -81,7 +79,7 @@ ptrCliente removeCliente(ptrCliente listaClientes){
     if(clienteAtual->nAlugueresAtual>0){
       printf("O cliente ainda tem guitarras em sua posse!\nDeseja continuar? 1-Sim  0-Nao\n");
       int option;
-      scanf(" %d",&option);
+      option = scanfInteiro();
       if(option==0){
         printf("Operação cancelada\n\n");
         return listaClientes;
@@ -90,7 +88,6 @@ ptrCliente removeCliente(ptrCliente listaClientes){
     ptrAluguer aluguerAtual, aluguerAnterior=NULL;
     aluguerAtual=clienteAtual->alugueres;
     //Apaga todos os alugueres associados ao cliente
-    //TODO:TESTARRR
     while(aluguerAtual!=NULL){
       aluguerAtual->guitarra->estado=DISPONIVEL;
       aluguerAnterior=aluguerAtual;
@@ -110,7 +107,6 @@ ptrCliente removeCliente(ptrCliente listaClientes){
 
 
 ptrCliente banirCliente(ptrCliente listaClientes, int nif, int motivo){
-  //TODO: Atualizar o ficheiro binários
   ptrCliente clienteAtual,clienteAnterior=NULL;
   clienteAtual = listaClientes;
   //Procura o cliente
@@ -123,7 +119,6 @@ ptrCliente banirCliente(ptrCliente listaClientes, int nif, int motivo){
     ptrAluguer aluguerAtual, aluguerAnterior=NULL;
     aluguerAtual=clienteAtual->alugueres;
     //Apaga todos os alugueres associados ao cliente
-    //TODO:TESTARRR
     while(aluguerAtual!=NULL){
       aluguerAtual->guitarra->estado=DISPONIVEL;
       aluguerAnterior=aluguerAtual;
@@ -153,8 +148,7 @@ void mostraCliente(ptrCliente listaClientes){
   }
   int nifTmp;
   printf("Introduza o nif do cliente a mostrar:\n");
-  scanf(" %d", &nifTmp);
-  //TODO:Fazer introduzir novamente se não exister cliente?
+  nifTmp = scanfInteiro();
 
   while(listaClientes != NULL){
     if(listaClientes->nif==nifTmp){
@@ -215,7 +209,6 @@ void listarClientesBanidos(){
 
 //devolve um se o cliente já existir, devolve 0 caso contrário
 int verificaCliente(ptrCliente listaClientes, int nif){
-  //TODO: Falta verificar nos clientes banidos
   while (listaClientes!=NULL) {
     if(listaClientes->nif==nif) return 1;
     listaClientes=listaClientes->prox;

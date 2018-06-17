@@ -13,7 +13,6 @@ ptrGuitarra importaGuitarras(ptrGuitarra listaGuitarras, int *total){
     return listaGuitarras;
   }
   ptrGuitarra tmp;
-  //TODO:Verificações ordem!
   while (fscanf(f," %d %d %d %d %[^\n]s",&id, &precoAluguerDia, &valor, &estado, nome)==5) {
     //Verifica se o ID é único
     if(devolveIndexGuitarra(listaGuitarras, *total, id) != -1){
@@ -46,7 +45,6 @@ ptrCliente importaClientes(ptrCliente listaClientes,ptrGuitarra listaGuitarras, 
     printf("Erro ao abrir o ficheiro %s!\n",NOME_FICHEIRO_CLIENTES);
     return listaClientes;
   }
-  //TODO:ADD VERIFICACOES
   int nif,nAlugueresTotal;
   char nome[100];
   ptrCliente tmpCliente;
@@ -158,7 +156,12 @@ ptrCliente importaClientes(ptrCliente listaClientes,ptrGuitarra listaGuitarras, 
 
 
 void exportaDados(ptrCliente listaClientes,ptrGuitarra listaGuitarras, int total){
+  if (listaClientes==NULL && total==0) {
+    return;
+  }
+
   FILE *f;
+
   //Exporta Guitarras
   f=fopen(NOME_FICHEIRO_GUITARRAS, "w");
   //Imprime guitarras
