@@ -19,11 +19,11 @@ ptrCliente criarAluguer(ptrCliente listaClientes, ptrGuitarra listaGuitarras, in
   }
 
   int opcao;
-  printf("Escolha a opção desejada para concluir o aluguer:\n1-Usar a data atual\n2-Indicar outra data\n>");
+  printf("Escolha a opção desejada para criar o aluguer:\n1-Usar a data atual\n2-Indicar outra data\n>");
   opcao = scanfInteiro();
   if(opcao==1){
   }else if(opcao==2){
-    printf("Introduza a data de conclusao do aluguer!\n");
+    printf("Introduza a data em que o aluguer foi criado!\n");
     alteraData(&diaAtual, &mesAtual, &anoAtual);
   }else{
     printf("Opção inválida!\n");

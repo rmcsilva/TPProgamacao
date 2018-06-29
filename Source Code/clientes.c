@@ -92,7 +92,7 @@ ptrCliente removeCliente(ptrCliente listaClientes){
       aluguerAtual->guitarra->estado=DISPONIVEL;
       aluguerAnterior=aluguerAtual;
       aluguerAtual=aluguerAtual->prox;
-      free(aluguerAtual);
+      free(aluguerAnterior);
     }
   }
   //Se a lista só tive um nó então o anterior está a null
@@ -123,7 +123,7 @@ ptrCliente banirCliente(ptrCliente listaClientes, int nif, int motivo){
       aluguerAtual->guitarra->estado=DISPONIVEL;
       aluguerAnterior=aluguerAtual;
       aluguerAtual=aluguerAtual->prox;
-      free(aluguerAtual);
+      free(aluguerAnterior);
     }
   }
 
